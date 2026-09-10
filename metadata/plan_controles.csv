@@ -1,0 +1,31 @@
+id_controle,categorie,variable,description,regle,niveau_gravite,action_prevue,seuil
+Q001,STRUCTURE,base,Effectif de collecte invalide,nrow(base) < 1 ou > 2000,CRITIQUE,Bloquer les analyses dépendantes sans supprimer de ligne,2000
+Q002,STRUCTURE,base,Schéma de livraison incomplet,Colonnes différentes du schéma attendu de 93 variables,CRITIQUE,Inventorier les variables absentes ou supplémentaires ; bloquer si absentes,93
+Q003,IDENTIFIANTS,id_enseignant,Identifiant absent,is.na ou chaîne vide,CRITIQUE,Signaler ; rechercher la source ; aucune suppression,
+Q004,IDENTIFIANTS,id_enseignant,Identifiant absent du tirage,Identifiant non présent dans échantillon_initial,CRITIQUE,Bloquer le rattachement au plan de sondage,
+Q005,DOUBLONS,id_enseignant,Identifiant répété,Toutes les occurrences des identifiants répétés,CRITIQUE,Signaler toutes les lignes ; examiner la raison technique avant décision,
+Q006,DOUBLONS,base,Ligne entièrement dupliquée,Toutes les occurrences des lignes identiques,MAJEUR,Signaler sans dédoublonner,
+Q007,COMPLETUDE,questionnaire,Questionnaire incomplet,Au moins une réponse NA parmi les 68 questions,MINEUR,Créer un flag et mesurer la complétion,
+Q008,COMPLETUDE,questionnaire,Complétion faible,Proportion de réponses présentes < 0.80,MAJEUR,Créer un flag ; ne pas exclure automatiquement,0.80
+Q009,MODALITES,questionnaire,Code de réponse non autorisé,Valeur observée hors du domaine du dictionnaire ; CTRL03 vaut 0 ou 1,CRITIQUE,Localiser les cellules ; éventuel passage à NA uniquement après diagnostic au nettoyage,
+Q010,BORNES,age,Âge impossible,Âge absent ou non entier ou hors de 23 à 65 ans,CRITIQUE,Signaler et vérifier la source,
+Q011,COHERENCE,anciennete,Anciennetés incohérentes,Ancienneté absente ou négative ou > âge-22 ; ancienneté_classe hors de 0 à ancienneté,CRITIQUE,Signaler sans corriger,
+Q012,COHERENCE,secteur|education_prioritaire,Privé en EP,Privé sous contrat et EP différente de Hors EP,CRITIQUE,Signaler la violation de la convention de simulation,
+Q013,COHERENCE,degre|discipline,Discipline incohérente,Premier degré non polyvalent ou collège polyvalent,CRITIQUE,Signaler sans recoder,
+Q014,TEMPS_DE_REPONSE,duree_secondes,Durée invalide,Durée manquante ou non finie ou <= 0,CRITIQUE,Signaler ; durée rapide non évaluable,
+Q015,TEMPS_DE_REPONSE,duree_secondes,Durée courte relativement à la charge et à la distribution,Durée valide < min de 3 secondes par réponse et médiane de référence divisée par 3 ; au moins 30 références,MAJEUR,Créer flag_rapide ; signal exploratoire sans exclusion,
+Q016,STRAIGHTLINING,48_items_principaux,Part modale élevée,Part de la modalité dominante >= 0.90 avec au moins 24 réponses valides,MAJEUR,Créer un flag ; non évaluable si moins de 24 réponses,0.90
+Q017,STRAIGHTLINING,48_items_principaux,Longue série identique,Au moins 20 réponses valides identiques dans l'ordre des pratiques ; NA et invalides rompent la série,MAJEUR,Créer un flag complémentaire sans exclusion,20
+Q018,NON_REPONSE,statut_questionnaire,Abandon déclaré,statut_questionnaire == Abandon,MAJEUR,Signaler et présenter les taux de participation incluant les abandons,
+Q019,SONDAGE,N_h|n_h|pi_h|poids_base,Informations de sondage incorrectes,Absence ou différence avec le tirage ; pi_h dans ]0;1] et poids positifs,CRITIQUE,Bloquer les estimations pondérées si anomalie,
+Q020,COHERENCE,taux_completion,Taux enregistré incohérent,Écart au taux recalculé > 1e-10 ou taux absent,MAJEUR,Signaler sans remplacer le taux source,
+Q021,PSYCHOMETRIE_PRELIMINAIRE,48_items_principaux,Item sans variance,Moins de deux réponses valides ou variance nulle,MAJEUR,Signaler ; ne pas supprimer sur ce seul critère,
+Q022,PSYCHOMETRIE_PRELIMINAIRE,8_dimensions,Corrélation moyenne non positive,Moyenne des 15 corrélations de Spearman intra-dimension <= 0 ; non évaluable si une paire ne peut être calculée,MAJEUR,Examiner les items et leur contenu sans optimiser alpha,
+Q023,COHERENCE,CTRL01,Consigne de lecture non respectée,Réponse valide différente de 3 ; NA non évaluable,MAJEUR,Créer un flag auxiliaire ; aucune exclusion isolée,
+Q024,COHERENCE,CTRL03,Champ de référence non respecté,Réponse valide égale à 0 ; NA non évaluable,MINEUR,Créer un flag ; examiner la pertinence de la consigne,
+Q025,STRUCTURE,base,Types incompatibles,Types différents du schéma de livraison attendu,CRITIQUE,Bloquer les contrôles dépendants ; ne pas convertir les données,
+Q026,MODALITES,caracteristiques,Modalité contextuelle inattendue,Modalité absente de la population synthétique ou valeur manquante,CRITIQUE,Signaler sans recoder,
+Q027,BORNES,effectif_classe|formation_continue,Contexte numérique impossible,Effectif hors de 12 à 35 ou formation hors de 0 à 20 ; valeur absente ou non entière,CRITIQUE,Signaler sans modifier,
+Q028,COHERENCE,statut_questionnaire,Statut de complétion incohérent,Statut inconnu ou Complet avec NA ou Partiel sans NA ou Abandon sans NA,MAJEUR,Signaler sans modifier le statut,
+Q029,NON_REPONSE,repondant,Suivi de participation incohérent,Ensemble des identifiants reçus différent des participants du suivi ou indicatrice différente de 1,CRITIQUE,Signaler ; taux de participation à interpréter avec réserve,
+Q030,TEMPS_DE_REPONSE,duree_secondes,Durée extrêmement courte,Durée valide < min de 1 seconde par réponse et 60 secondes et seuil rapide,MAJEUR,Créer flag_tres_rapide ; présomption forte à vérifier sans invalidation automatique,

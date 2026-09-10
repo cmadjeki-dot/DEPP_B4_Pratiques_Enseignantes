@@ -1,0 +1,33 @@
+source(file.path("..", "..", "R/functions/items.R"), encoding = "UTF-8", local = TRUE)
+items_config <- yaml::read_yaml(file.path("..", "..", "config/config.yml"))$simulation_items
+items_dict <- read.csv(file.path("..", "..", "metadata/dictionnaire_variables.csv"), fileEncoding = "UTF-8")
+items_traits <- readRDS(file.path("..", "..", "data/simulated/traits_latents_repondants.rds"))
+items_repondants <- readRDS(file.path("..", "..", "data/simulated/repondants.rds"))
+items_reference <- readRDS(file.path("..", "..", "data/simulated/echantillon_initial.rds"))
+testthat::test_that("les effets contextuels sont identifiables et le socle est conservé", {
+  contexte <- contextualiser_traits(items_traits, items_repondants, items_reference, items_config$effets_contextuels)
+  testthat::expect_identical(contexte$traits$id_enseignant, items_traits$id_enseignant)
+  testthat::expect_identical(contexte$traits$latent_COL, items_traits$latent_COL)
+  testthat::expect_false(identical(contexte$traits$latent_NUM, items_traits$latent_NUM))
+  testthat::expect_true(all(contexte$diagnostic$sd_effet <= 0.40))
+})
+testthat::test_that("48 paramètres sont variables, cohérents et reproductibles", {
+  p <- parametrer_items(items_dict, items_config)
+  testthat::expect_identical(p, parametrer_items(items_dict, items_config))
+  testthat::expect_equal(nrow(p), 48L)
+  testthat::expect_true(all(p$loading >= 0.5 & p$loading <= 0.8))
+  testthat::expect_equal(anyDuplicated(p[paste0("seuil_", 1:4)]), 0L)
+  testthat::expect_true(all(apply(p[paste0("seuil_", 1:4)], 1, function(x) all(diff(x) > 0))))
+})
+testthat::test_that("les réponses sont ordinales et les seuils invalides bloquent le tirage", {
+  p <- parametrer_items(items_dict, items_config)
+  x <- simuler_items_ordinaux(items_traits, p, items_config$graine_erreurs)
+  testthat::expect_identical(x, simuler_items_ordinaux(items_traits, p, items_config$graine_erreurs))
+  testthat::expect_identical(x$id_enseignant, items_traits$id_enseignant)
+  testthat::expect_equal(ncol(x), 49L)
+  testthat::expect_false(anyNA(x))
+  testthat::expect_true(all(as.matrix(x[-1]) %in% 1:5))
+  testthat::expect_true(all(vapply(x[-1], is.integer, logical(1))))
+  p$seuil_2[1] <- p$seuil_1[1] - 1
+  testthat::expect_error(simuler_items_ordinaux(items_traits, p, items_config$graine_erreurs))
+})

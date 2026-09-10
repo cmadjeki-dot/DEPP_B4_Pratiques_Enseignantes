@@ -1,0 +1,11 @@
+testthat::test_that("la livraison brute préserve intégralement les observations de collecte", {
+  config <- yaml::read_yaml("../../config/config.yml")
+  brut <- readRDS(file.path("../..", config$questionnaire_brut$sortie))
+  source <- readRDS(file.path("../..", config$imperfections$sortie))
+  testthat::expect_equal(nrow(brut), nrow(source))
+  testthat::expect_equal(ncol(brut), 93L)
+  testthat::expect_true(all(vapply(names(brut), function(nom) identical(brut[[nom]], source[[nom]]), logical(1))))
+  testthat::expect_false(any(c("flag_rapide_simule", "flag_straightlining_simule", "prob_reponse_theorique") %in% names(brut)))
+  testthat::expect_setequal(names(attributes(brut)), c("names", "row.names", "class", "avertissement", "provenance"))
+  testthat::expect_equal(sum(brut$statut_questionnaire == "Abandon"), config$imperfections$nombre_abandons)
+})

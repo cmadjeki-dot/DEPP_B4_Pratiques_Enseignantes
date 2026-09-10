@@ -1,0 +1,217 @@
+# Hypothèses de simulation choisies pour le démonstrateur, sans valeur officielle.
+projet:
+  nom: DEPP_B4_Pratiques_Enseignantes
+  avertissement: >-
+    Données simulées à des fins de démonstration méthodologique. Les résultats
+    présentés ne constituent pas des résultats officiels de la DEPP et ne décrivent
+    pas la population réelle des enseignants.
+
+echantillon:
+  taille: 2000
+  graine: 20260910
+  sortie: data/simulated/echantillon_initial.rds
+  allocation:
+    P1_PUBLIC_HEP: 620
+    P1_PUBLIC_REP: 130
+    P1_PUBLIC_REPPLUS: 100
+    P1_PRIVE: 150
+    COL_PUBLIC_HEP: 600
+    COL_PUBLIC_REP: 150
+    COL_PUBLIC_REPPLUS: 100
+    COL_PRIVE: 150
+
+non_reponse:
+  graine: 20260912
+  taux_reponse_attendu: 0.75
+  sortie_complete: data/simulated/echantillon_nonreponse.rds
+  sortie_repondants: data/simulated/repondants.rds
+  coefficients:
+    college: -0.20
+    prive: -0.15
+    rep: -0.15
+    repplus: -0.30
+    formation_par_5_jours: 0.25
+    equipement_bon: 0.15
+    anciennete_par_10_ans: -0.08
+    effectif_par_5_eleves: -0.15
+
+dimensions_latentes:
+  graine: 20260911
+  population_reference: repondants_simules
+  sortie: data/simulated/traits_latents_repondants.rds
+  dimensions: [EXP, DIF, EVA, GCL, COL, NUM, DEV, REL]
+  correlation_commune: 0.20
+  correlations_specifiques:
+    EXP_EVA: 0.45
+    DIF_EVA: 0.40
+    DIF_DEV: 0.40
+    COL_DEV: 0.45
+    NUM_DEV: 0.25
+    REL_GCL: 0.30
+  seuil_ecart_descriptif: 0.10
+
+simulation_items:
+  graine_parametres: 20260913
+  graine_erreurs: 20260914
+  sortie_traits: data/simulated/traits_latents_contextuels.rds
+  sortie_reponses: data/simulated/reponses_items_principaux.rds
+  loading: [0.50, 0.80]
+  multiplicateur_erreur: [0.90, 1.10]
+  difficulte: [-0.35, 0.35]
+  seuils_base: [-1.20, -0.35, 0.40, 1.20]
+  amplitude_jitter_seuils: 0.10
+  decalage_dimension:
+    EXP: -0.25
+    DIF: 0.05
+    EVA: -0.15
+    GCL: -0.35
+    COL: 0.15
+    NUM: 0.20
+    DEV: 0.15
+    REL: -0.25
+  effets_contextuels:
+    formation:
+      DIF: 0.18
+      EVA: 0.15
+      DEV: 0.25
+    equipement:
+      NUM: 0.35
+    experience:
+      EXP: 0.12
+      GCL: 0.18
+      REL: 0.08
+
+faisabilite_priorite:
+  graine: 20260915
+  sortie: data/simulated/reponses_faisabilite_priorite.rds
+  seuils: [-1.15, -0.35, 0.40, 1.20]
+  decalages: [-0.15, 0.10, -0.05, -0.20, 0.15, 0.10, 0.20, -0.15]
+  effet_equipement: [0.10, 0.15, 0.15, 0.05, 0.15, 0.45, 0.15, 0.05]
+  effet_effectif: [-0.15, -0.35, -0.25, -0.30, -0.10, -0.15, -0.10, -0.20]
+  effet_formation: [0.10, 0.20, 0.15, 0.10, 0.15, 0.15, 0.25, 0.10]
+  sd_faisabilite_commun: 0.30
+  sd_faisabilite_item: 0.85
+  lien_preference_pratique: 0.35
+  loading_priorite: 0.80
+
+controles:
+  graine: 20260916
+  sortie: data/simulated/reponses_questionnaire.rds
+  seuils: [-0.50, 0.35, 1.05, 1.75]
+  loading_difficulte: 0.55
+  decalage_ctrl04: 0.15
+  probabilite_lecture: 0.96
+  probabilite_champ: 0.95
+
+imperfections:
+  graine: 20260917
+  sortie: data/simulated/reponses_imparfaites.rds
+  taux_manquant_aleatoire: 0.005
+  taux_manquant_fin: 0.06
+  nombre_items_fin: 10
+  nombre_partiels: 40
+  nombre_abandons: 25
+  nombre_straightlining: 30
+  nombre_rapides: 25
+  nombre_items_constants: 46
+  nombre_trous_partiel: 18
+  abandon_position: [20, 48]
+  duree_mediane: 900
+  duree_sdlog: 0.30
+  duree_min_normale: 300
+  duree_rapide: [20, 90]
+  date_debut: '2026-09-01'
+  nombre_jours: 10
+
+questionnaire_brut:
+  sortie: data/simulated/questionnaire_brut.rds
+
+nettoyage:
+  version_regles: '1.0'
+  completion_principale: 0.50
+  minimum_pratiques: 24
+  completion_sensibilite: 0.80
+  sortie_clean: data/processed/questionnaire_clean.rds
+  sortie_exclus: data/processed/questionnaire_exclus.rds
+  sortie_decisions: data/interim/questionnaire_statuts.rds
+
+ponderation:
+  minimum_selectionnes: 50
+  minimum_repondants: 30
+  bornes_calibration: [0.5, 2.0]
+  tolerance: 0.00000001
+  sortie: data/processed/questionnaire_weighted.rds
+
+population:
+  taille: 100000
+  graine: 20260909
+  sortie: data/simulated/population_enseignants.rds
+  degres: ["Premier degré", "Collège"]
+  probabilites_degre: [0.58, 0.42]
+  sexes: ["Femme", "Homme"]
+  probabilite_femme: [0.82, 0.59] # Même ordre que degres.
+  secteurs: ["Public", "Privé sous contrat"]
+  probabilite_prive: [0.14, 0.21]
+  territoires: ["Urbain", "Périurbain", "Rural"]
+  probabilites_territoire:
+    premier: [0.43, 0.32, 0.25]
+    college: [0.52, 0.31, 0.17]
+  education_prioritaire: ["Hors EP", "REP", "REP+"]
+  # Probabilités conditionnelles au territoire pour le public uniquement.
+  probabilites_ep_public:
+    urbain: [0.70, 0.20, 0.10]
+    periurbain: [0.86, 0.11, 0.03]
+    rural: [0.93, 0.06, 0.01]
+  age:
+    minimum: 23
+    maximum: 65
+    moyennes: [43, 44]
+    ecart_type: 10
+  anciennete:
+    age_entree_minimum: 22
+    age_entree_maximum: 32
+    interruptions_lambda: 1.2
+    # Part aléatoire de l'ancienneté totale passée au niveau actuel (loi bêta).
+    niveau_beta: [2, 3]
+  effectif_classe:
+    minimum: 12
+    maximum: 35
+    moyennes: [24, 27]
+    ecart_type: 3
+    effets_ep: [0, -2, -4]
+    effets_territoire: [0.0, -0.5, -1.5]
+    effet_prive: 0.5
+  statut:
+    public: ["Titulaire", "Contractuel"]
+    prive: ["Maître contractuel ou agréé", "Maître délégué"]
+    probabilite_temporaire: [0.05, 0.09]
+    surcroit_debut_carriere: 0.06
+    seuil_debut_carriere: 3
+  formation_continue:
+    # Jours de formation sur les douze derniers mois : présence puis compte positif.
+    maximum_jours: 20
+    probabilite_base: 0.65
+    effet_ep: 0.07
+    effet_college: -0.04
+    lambda_jours: 3
+  equipement_numerique:
+    modalites: ["Faible", "Moyen", "Bon"]
+    probabilites: [0.22, 0.48, 0.30]
+    # Transferts de probabilité entre Faible et Bon, sans modifier Moyen.
+    transfert_college: 0.07
+    transfert_rural: -0.05
+    transfert_prive: 0.03
+  disciplines:
+    premier: "Polyvalent premier degré"
+    college:
+      - "Français"
+      - "Mathématiques"
+      - "Histoire-géographie"
+      - "Langues vivantes"
+      - "Sciences de la vie et de la Terre"
+      - "Physique-chimie"
+      - "Technologie"
+      - "Éducation physique et sportive"
+      - "Arts plastiques"
+      - "Éducation musicale"
+    probabilites: [0.18, 0.18, 0.13, 0.18, 0.07, 0.07, 0.06, 0.07, 0.03, 0.03]

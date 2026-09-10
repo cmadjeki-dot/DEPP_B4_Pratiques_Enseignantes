@@ -1,0 +1,10 @@
+{
+    "r.rterm.windows": "C:\\Program Files\\R\\R-4.6.0\\bin\\R.exe",
+    "r.rpath.windows": "C:\\Program Files\\R\\R-4.6.0\\bin\\R.exe",
+    "terminal.integrated.env.windows": {
+        "PATH": "C:\\Program Files\\R\\R-4.6.0\\bin;C:\\Program Files\\Quarto\\bin;${env:PATH}",
+        "LANG": "French_France.utf8",
+        "LC_ALL": "French_France.utf8",
+        "LC_CTYPE": "French_France.utf8"
+    }
+}

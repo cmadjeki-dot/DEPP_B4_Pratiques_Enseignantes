@@ -1,0 +1,68 @@
+# Sessions, caches et fichiers temporaires R
+.Rhistory
+.RData
+.RDataTmp
+.Ruserdata
+.Rproj.user/
+Rplots.pdf
+.Rtmp*/
+Rtmp*/
+*.Rout
+
+# Dépendances renv locales : conserver renv.lock et les scripts d'amorçage
+/renv/library/
+/renv/staging/
+/renv/cache/
+/renv/sandbox/
+/renv/python/
+/renv/local/
+
+# Données individuelles : conserver uniquement les marqueurs de structure
+/data/raw/*
+!/data/raw/.gitkeep
+/data/simulated/*
+!/data/simulated/.gitkeep
+/data/interim/*
+!/data/interim/.gitkeep
+/data/processed/*
+!/data/processed/.gitkeep
+
+# Résultats reproductibles générés : tableaux, figures et modèles
+/outputs/*
+!/outputs/.gitkeep
+!/outputs/figures/
+!/outputs/tables/
+!/outputs/models/
+/outputs/figures/*
+!/outputs/figures/.gitkeep
+/outputs/tables/*
+!/outputs/tables/.gitkeep
+/outputs/models/*
+!/outputs/models/.gitkeep
+
+# Caches et sorties intermédiaires Quarto ; docs/ reste publiable
+.quarto/
+*_cache/
+/reports/*_files/
+/presentation/*_files/
+_freeze/
+/_site/
+/reports/*.html
+/reports/*.pdf
+/reports/*.docx
+/reports/*.tex
+/reports/*.log
+/reports/*.aux
+
+# Fichiers temporaires Windows et sauvegardes d'éditeurs
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+~$*
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~

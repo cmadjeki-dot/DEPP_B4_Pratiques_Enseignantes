@@ -1,0 +1,58 @@
+statut: Items retenus à ce stade ; scores non définitivement validés
+items:
+  COL:
+  - COL01
+  - COL02
+  - COL03
+  - COL04
+  - COL05
+  - COL06
+  DEV:
+  - DEV01
+  - DEV02
+  - DEV03
+  - DEV04
+  - DEV05
+  - DEV06
+  DIF:
+  - DIF01
+  - DIF02
+  - DIF03
+  - DIF04
+  - DIF05
+  - DIF06
+  EVA:
+  - EVA01
+  - EVA02
+  - EVA03
+  - EVA04
+  - EVA05
+  - EVA06
+  EXP:
+  - EXP01
+  - EXP02
+  - EXP03
+  - EXP04
+  - EXP05
+  - EXP06
+  GCL:
+  - GCL01
+  - GCL02
+  - GCL03
+  - GCL04
+  - GCL05
+  - GCL06
+  NUM:
+  - NUM01
+  - NUM02
+  - NUM03
+  - NUM04
+  - NUM05
+  - NUM06
+  REL:
+  - REL01
+  - REL02
+  - REL03
+  - REL04
+  - REL05
+  - REL06

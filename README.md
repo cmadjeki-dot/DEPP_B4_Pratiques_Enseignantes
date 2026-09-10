@@ -370,6 +370,21 @@ en cas d'échec ou de suite incomplète. Validation initiale : **16 blocs réuss
 0 échoué, 0 ignoré ; 131 vérifications réussies**, dont 9 blocs dans
 `test_sampling.R`. Aucun commit ne doit être effectué après un échec non corrigé.
 
+### Psychométrie exploratoire (prompts 61 à 69)
+
+Après le nettoyage, exécuter `Rscript.exe R/09_psychometrics.R`, puis
+`Rscript.exe tests/run_tests.R`. Les paramètres figurent dans
+`config/psychometrie.yml` et les choix méthodologiques dans
+[docs/psychometrie.md](docs/psychometrie.md).
+Cette étape produit les diagnostics des 48 items, les matrices polychorïques,
+alpha, oméga, item-total, KMO/Bartlett et huit analyses parallèles ordinales.
+Elle compare aussi quatre scénarios de qualité dans
+`outputs/tables/sensibilite_psychometrie.csv` et documente les décisions dans
+`outputs/tables/decision_items.csv`. La liste versionnée des items retenus est
+`metadata/items_retenus_scores.yml`, distincte du questionnaire original.
+Les analyses sont exploratoires, non pondérées, sans suppression d'item ni
+validation automatique des scores. Les sorties générées restent ignorées par Git.
+
 La publication GitHub est une étape ultérieure, soumise à une demande explicite.
 
 Références techniques : [initialisation renv](https://pkgs.rstudio.com/renv/reference/init.html),

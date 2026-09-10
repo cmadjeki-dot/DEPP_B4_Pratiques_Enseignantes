@@ -1,0 +1,15 @@
+graine: 20260920
+iterations_parallel: 100
+quantile_parallel: 0.95
+seuil_extremite: 0.15
+seuil_missing: 0.10
+seuil_asymetrie: 1
+seuil_concentration: 0.80
+seuil_ecart_type: 0.50
+seuil_item_total: 0.30
+seuil_correlation_moyenne: 0.20
+seuil_redondance: 0.85
+seuil_charge: 0.40
+seuil_communalite: 0.20
+seuil_msa: 0.50
+seuil_alpha_redondance: 0.95

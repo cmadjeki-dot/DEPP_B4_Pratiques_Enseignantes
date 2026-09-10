@@ -1,0 +1,7 @@
+graine: 20260921
+iterations_parallel: 100
+quantile_parallel: 0.95
+charge_principale: 0.40
+charge_secondaire: 0.30
+ecart_charges: 0.20
+fraction_items_minimum: 0.6666666667

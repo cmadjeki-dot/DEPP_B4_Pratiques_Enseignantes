@@ -385,6 +385,21 @@ Elle compare aussi quatre scénarios de qualité dans
 Les analyses sont exploratoires, non pondérées, sans suppression d'item ni
 validation automatique des scores. Les sorties générées restent ignorées par Git.
 
+### Structure factorielle globale et scores
+
+`Rscript.exe R/10_factor_analysis.R` étudie les items retenus par analyse
+parallèle ordinale et AFE minres avec rotation oblimin. Les méthodes et limites
+sont détaillées dans [docs/analyse_factorielle.md](docs/analyse_factorielle.md).
+Les scores 1–5 et leurs Z sont destinés à une base enrichie distincte ; les
+réponses originales restent préservées. Le premier calcul global de 100
+permutations peut prendre plusieurs minutes ; un cache vérifié permet les
+réexécutions avec les mêmes entrées et paramètres.
+
+Le même script construit `data/processed/base_analytique.rds`, avec les poids
+calibrés, les GAP priorité–pratique et les contraintes `5 - FAIS`.
+Le schéma est documenté dans `metadata/dictionnaire_base_analytique.csv` et
+les règles dans [docs/base_analytique.md](docs/base_analytique.md).
+
 La publication GitHub est une étape ultérieure, soumise à une demande explicite.
 
 Références techniques : [initialisation renv](https://pkgs.rstudio.com/renv/reference/init.html),

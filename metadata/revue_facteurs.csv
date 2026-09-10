@@ -1,0 +1,9 @@
+facteur,dimension_theorique,interpretation,coherence,commentaire,score_autorise,empreinte_loadings
+"F1","REL","Écoute, reconnaissance, participation et inclusion des élèves","COHERENTE_AVEC_RESERVE","REL01–REL06 dominent ce facteur ; REL05 concerne les familles, réserve conservée.","TRUE","f65eabee546773369a5d547ddabcd331"
+"F2","NUM","Usages pédagogiques du numérique et accompagnement des élèves","COHERENTE_AVEC_RESERVE","NUM01–NUM06 dominent ; NUM06 porte spécifiquement sur la fiabilité informationnelle.","TRUE","f65eabee546773369a5d547ddabcd331"
+"F3","DIF","Adaptation des aides, tâches, temps, groupes et supports","COHERENTE","DIF01–DIF06 dominent ; l'approfondissement de DIF06 complète la remédiation.","TRUE","f65eabee546773369a5d547ddabcd331"
+"F4","DEV","Ressources, formation, expérimentation et réflexion professionnelles","COHERENTE","DEV01–DEV06 dominent ; les occasions de formation restent des conditions d'exercice.","TRUE","f65eabee546773369a5d547ddabcd331"
+"F5","GCL","Organisation et régulation du fonctionnement de la classe","COHERENTE","GCL01–GCL06 réunissent règles, routines, transitions et gestion des comportements.","TRUE","f65eabee546773369a5d547ddabcd331"
+"F6","COL","Préparation, partage et analyse collective entre collègues","COHERENTE","COL01–COL06 déclinent différentes intensités de coopération professionnelle.","TRUE","f65eabee546773369a5d547ddabcd331"
+"F7","EVA","Recueil d'information, critères, feedback et régulation formative","COHERENTE","EVA01–EVA06 décrivent un cycle formatif incluant l'autoévaluation des élèves.","TRUE","f65eabee546773369a5d547ddabcd331"
+"F8","EXP","Objectifs, démonstration, explicitation, guidage et compréhension","COHERENTE_AVEC_RESERVE","EXP01–EXP06 dominent ; la proximité conceptuelle de EXP06 avec EVA reste à signaler.","TRUE","f65eabee546773369a5d547ddabcd331"

@@ -1,0 +1,14 @@
+# Spécifications fixées avant lecture des coefficients ; pas de sélection par p-value.
+graine: 20260924
+seuil_modalite_rare: 30
+seuil_quasi_constant: 0.98
+centre_anciennete: 15
+unite_anciennete: 10
+centre_effectif: 24
+unite_effectif: 5
+jours_scenario_formation: 3
+seuil_vif_alerte: 5
+sensibilite:
+  # Écarts tolérés exprimés en erreurs standards du modèle principal.
+  ecart_modere_se: 0.5
+  ecart_sensible_se: 1.0

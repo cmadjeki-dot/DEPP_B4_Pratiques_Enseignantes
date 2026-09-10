@@ -415,5 +415,19 @@ figures de profils sont documentés dans [la méthodologie de la typologie](docs
 
 La publication GitHub est une étape ultérieure, soumise à une demande explicite.
 
+## Modèles associatifs et sorties pour Quarto
+
+Exécuter `Rscript.exe R/12_models.R`, puis `Rscript.exe R/13_outputs.R` et
+`Rscript.exe tests/run_tests.R`. Les modèles utilisent le plan survey calibré,
+des spécifications progressives et des sensibilités de pondération et de qualité.
+Ils ne permettent aucune interprétation causale. Le modèle de profil reste
+conditionnel à une classification faiblement stable.
+
+Les décisions méthodologiques sont dans [docs/modelisation.md](docs/modelisation.md).
+Les sorties comprennent `modeles_finaux.html`, `interpretation_modeles.md`, le
+catalogue des indicateurs et `outputs/models/resultats_quarto.rds`. Le manifeste
+des sorties distingue les figures finales homogènes des explorations antérieures.
+Le script de sorties charge les résultats existants et ne réestime pas les modèles.
+
 Références techniques : [initialisation renv](https://pkgs.rstudio.com/renv/reference/init.html),
 [verrouillage des dépendances](https://rstudio.github.io/renv/reference/snapshot.html).

@@ -1,14 +1,17 @@
 # Statistiques sur le plan calibré ; dénominateurs propres aux réponses observées.
 resumer_continue <- function(design, valeurs) {
   d <- design; d$variables$.valeur_desc <- as.numeric(valeurs)
-  present <- !is.na(valeurs); n <- sum(present)
+  # Un sous-domaine calibré peut conserver les lignes externes avec un poids nul.
+  actif <- as.numeric(weights(d))>0
+  d$variables$.valeur_desc[!actif] <- NA_real_
+  present <- !is.na(valeurs) & actif; n <- sum(present)
   stopifnot(n>=2,all(is.finite(valeurs[present])))
   m <- survey::svymean(~.valeur_desc,d,na.rm=TRUE)
   moyenne <- as.numeric(coef(m)); se <- sqrt(as.numeric(vcov(m)))
   ddl <- survey::degf(d); stopifnot(ddl>0)
   ci <- moyenne+c(-1,1)*qt(.975,ddl)*se
   med <- as.numeric(coef(survey::svyquantile(~.valeur_desc,d,quantiles=.5,ci=FALSE,na.rm=TRUE)))
-  data.frame(n=n,n_manquants=sum(!present),taux_reponse=n/length(valeurs),
+  data.frame(n=n,n_manquants=sum(actif & !present),taux_reponse=n/sum(actif),
     taux_reponse_pondere=sum(weights(d)[present])/sum(weights(d)),
     moyenne_ponderee=moyenne,ecart_type_pondere=sqrt(as.numeric(coef(survey::svyvar(~.valeur_desc,d,na.rm=TRUE)))),
     mediane_ponderee=med,ic95_inf=ci[1],ic95_sup=ci[2],denominateur_pondere=sum(weights(d)[present]))

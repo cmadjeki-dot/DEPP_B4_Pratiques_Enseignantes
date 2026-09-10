@@ -1,0 +1,7 @@
+graine: 20260922
+k: [2, 3, 4, 5, 6]
+repetitions_stabilite: 30
+fraction_sous_echantillon: 0.80
+seuil_redondance: 0.85
+seuil_z_atypique: 3
+kmeans_nstart: 100

@@ -1,0 +1,9 @@
+k_retenu: 2
+portee: "Partition descriptive exploratoire, séparation et stabilité faibles ; aucune typologie naturelle validée."
+justification: "Deux classes de 915 et 548 individus : lecture simple d'un niveau général de pratiques ; meilleure silhouette observée (0.142), meilleure stabilité moyenne relative mais faible (ARI 0.290). Les subdivisions ajoutent des contrastes moins stables et une complexité peu justifiée."
+interpretations:
+  '2': "Gradation générale des huit pratiques ; deux groupes de tailles substantielles, solution parcimonieuse."
+  '3': "Ajoute un contraste EXP/EVA relativement plus élevés et NUM/DEV plus faibles ; silhouette et stabilité moyennes diminuent."
+  '4': "Scinde davantage le groupe à niveaux généralement plus faibles ; contrastes de contenu possibles mais séparation faible."
+  '5': "Isole notamment DIF/EVA relativement élevés avec COL plus faible ; groupe minimal de 140, stabilité réduite."
+  '6': "Distingue davantage COL/DEV et NUM ; groupe minimal de 122 et stabilité moyenne la plus faible."

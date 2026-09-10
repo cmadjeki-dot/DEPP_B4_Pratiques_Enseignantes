@@ -400,6 +400,19 @@ calibrés, les GAP priorité–pratique et les contraintes `5 - FAIS`.
 Le schéma est documenté dans `metadata/dictionnaire_base_analytique.csv` et
 les règles dans [docs/base_analytique.md](docs/base_analytique.md).
 
+### Classification exploratoire
+
+`Rscript.exe R/11_clustering.R` produit l'ACP, les CAH de deux à six classes,
+la stabilité par sous-échantillonnage, la comparaison k-means et les descriptions
+des profils. Les choix et limites sont dans [docs/classification.md](docs/classification.md).
+La partition retenue à deux groupes reste faiblement séparée et instable ; ses
+étiquettes neutres ne représentent pas une typologie validée d'enseignants.
+La base enrichie distincte est `data/processed/base_analytique_profils.rds`.
+Le script ajoute également `CLUSTER_ID` et `PROFIL_PRATIQUES` à la base analytique
+et actualise son dictionnaire. Les noms relatifs décrivent un gradient de fréquence
+déclarée. La composition pondérée, les écarts déclarés priorité–pratique et les quatre
+figures de profils sont documentés dans [la méthodologie de la typologie](docs/methodologie_typologie.md).
+
 La publication GitHub est une étape ultérieure, soumise à une demande explicite.
 
 Références techniques : [initialisation renv](https://pkgs.rstudio.com/renv/reference/init.html),

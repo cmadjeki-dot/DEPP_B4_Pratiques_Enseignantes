@@ -89,3 +89,5 @@
 "CONTRAINTE_DEV","Contrainte perçue dérivée de la faisabilité DEV","DEV","numeric","Calcul analytique",0,4,NA,32,"5 - FAIS_DEV ; de 0 (faisabilité maximale) à 4 ; NA propagé. Indicateur dérivé, pas une échelle validée de contraintes."
 "GAP_REL","Écart priorité moins pratique REL","REL","numeric","Calcul analytique",-4,4,NA,139,"PRIO_REL - SCORE_REL ; NA si l'un manque. Différence exploratoire d'ancrages distincts."
 "CONTRAINTE_REL","Contrainte perçue dérivée de la faisabilité REL","REL","numeric","Calcul analytique",0,4,NA,30,"5 - FAIS_REL ; de 0 (faisabilité maximale) à 4 ; NA propagé. Indicateur dérivé, pas une échelle validée de contraintes."
+"CLUSTER_ID","CLUSTER_ID",NA,"integer","R/11_clustering.R",1,2,"1 | 2",46,"CAH exploratoire sur huit Z complets ; NA si non classé. Nom relatif, non évaluatif ; stabilité faible."
+"PROFIL_PRATIQUES","PROFIL_PRATIQUES",NA,"character","R/11_clustering.R",NA,NA,"Pratiques déclarées moins fréquentes, notamment numériques | Pratiques déclarées plus fréquentes, contraste numérique marqué",46,"CAH exploratoire sur huit Z complets ; NA si non classé. Nom relatif, non évaluatif ; stabilité faible."

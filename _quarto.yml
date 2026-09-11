@@ -27,6 +27,8 @@ website:
         text: Annexes
       - href: reports/note_decideur.qmd
         text: Note décideur
+      - href: presentation/presentation_depp_b4.qmd
+        text: Présentation
   page-footer: "Données simulées — aucune statistique officielle de la DEPP."
 
 format:

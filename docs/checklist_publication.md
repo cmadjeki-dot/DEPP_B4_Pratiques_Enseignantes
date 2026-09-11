@@ -1,0 +1,51 @@
+# Checklist avant publication
+
+Audit du 11 septembre 2026. Les coches représentent des vérifications effectuées ; les étapes distantes restent à confirmer après déploiement.
+
+## Sources et données
+
+- [x] Arborescence essentielle présente ; scripts, fonctions, configurations et métadonnées séparés.
+- [x] README précédent conservé intégralement dans `README_historique.md`.
+- [x] README final : avertissement visible, méthode, limites, commandes et table des scripts.
+- [x] Données individuelles et sorties volumineuses exclues ; seuls les `.gitkeep` sont suivis dans `data/` et `outputs/`.
+- [x] Chemins de traitement relatifs dans R et Quarto ; paramètres Windows locaux dans `.vscode/settings.json` et dans les instructions historiques, sans répertoire personnel.
+- [x] Aucun fichier temporaire ni identifiant secret détecté dans le périmètre versionné par les recherches ciblées. Ce contrôle ne constitue pas une certification exhaustive.
+- [x] Questionnaire, dictionnaires, plan de sondage, règles qualité et limites documentés.
+
+## Reproduction
+
+- [x] `renv::restore(prompt = FALSE)` : bibliothèque déjà synchronisée avec le verrou.
+- [x] Script maître créé avec processus isolés, statut, durée et arrêt sur erreur.
+- [x] Pipeline complet terminé : 17 étapes, 729,8 secondes ; voir `outputs/pipeline_execution_log.txt`.
+- [x] Tests complets exécutés après génération de la note : 75 blocs et 826 vérifications réussis, aucun échec ni test ignoré.
+- [x] Rendu global et audit des liens terminés sans erreur.
+- [ ] Reproduction sur un environnement GitHub Actions vierge validée.
+
+Les sorties antérieures sont présentes pendant la vérification locale. L’analyse parallèle utilise un cache contrôlé si les entrées et versions concordent. La réussite locale ne suffit pas à certifier la reproduction sur une autre machine.
+
+Avertissement non bloquant observé : `testthat` a été compilé sous R 4.6.1, contre R 4.6.0 pour l'exécution. Tous les tests ont réussi ; surveiller la compatibilité lors de la restauration distante, sans modifier automatiquement les versions verrouillées.
+
+## Git et publication
+
+- [x] Dépôt distant existant inspecté : un commit initial et un README seulement ; aucun workflow existant.
+- [ ] Historiques réunis sans force push ; branche `main` et remote vérifiés.
+- [ ] Commit final et dépôt local propre.
+- [ ] Push confirmé.
+- [ ] Pages configuré sur GitHub Actions, build et déploiement réussis.
+- [ ] Accueil, rapport, figures, liens et navigation publiés contrôlés.
+- [ ] README Mermaid affiché sur GitHub et affichage mobile vérifié.
+
+Le schéma utilise la syntaxe `flowchart LR` dans un bloc `mermaid`, prise en charge par [GitHub](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams). Le contrôle visuel distant reste distinct de la validité du bloc Markdown.
+
+Le workflow sépare construction et déploiement, limite les droits Pages au second job et publie uniquement `_site`, conformément au [schéma GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages). R/Quarto et les dépendances sont restaurés avant le calcul ; aucun résultat individuel n’est envoyé comme artefact Pages.
+
+## Conditions d'activation distante
+
+Le diagnostic du gestionnaire d'identifiants Git n'a trouvé aucune authentification GitHub utilisable. Se connecter depuis VS Code ou Git Credential Manager ; ne jamais écrire de jeton dans les sources ou la documentation.
+
+Dans le dépôt GitHub, choisir **Settings → Pages → Build and deployment → Source : GitHub Actions**. Le workflow part sur un push vers `main` ou via **Actions → Reproduction et publication Quarto → Run workflow**. Les journaux sont conservés comme artefact même après un échec de calcul. Les étapes de rendu, tests et audit doivent réussir avant l'envoi de l'artefact Pages.
+
+URL cible, à ne présenter comme publiée qu'après contrôle :
+`https://cmadjeki-dot.github.io/DEPP_B4_Pratiques_Enseignantes/`.
+
+Le runner Windows et les versions R/Quarto correspondent au contexte local afin de limiter les différences numériques et d'encodage. Aucune empreinte de validation scientifique ne doit être actualisée automatiquement pour contourner un échec : si les charges factorielles diffèrent, une revue des résultats est nécessaire.

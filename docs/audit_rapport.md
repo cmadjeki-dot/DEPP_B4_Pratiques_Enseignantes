@@ -2,7 +2,7 @@
 
 ## Périmètre
 
-Accueil, rapport scientifique et annexes HTML produits par Quarto. Le rendu est local ; aucune publication GitHub n’est effectuée. La note décideur, encore vide, n’est pas incluse dans la navigation.
+Accueil, rapport scientifique et annexes HTML produits par Quarto lors de l'audit initial. La note décideur est désormais rédigée, rendue et incluse dans la navigation ; voir `audit_note_decideur.md`. Le statut courant de publication et de reproduction figure dans `checklist_publication.md`.
 
 ## Corrections apportées
 

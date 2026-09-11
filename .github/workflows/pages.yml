@@ -1,0 +1,58 @@
+name: Reproduction et publication Quarto
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 180
+    env:
+      LANG: French_France.utf8
+      LC_ALL: French_France.utf8
+    steps:
+      - uses: actions/checkout@v6
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.6.0'
+      - uses: r-lib/actions/setup-renv@v2
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: '1.10.18'
+      - name: Recalculer depuis les sources
+        run: Rscript R/00_run_all.R
+      - name: Rendre les rapports et la note
+        run: quarto render
+      - name: Tester les résultats
+        run: Rscript tests/run_tests.R
+      - name: Vérifier les liens locaux
+        run: ./tests/audit_rapport.ps1
+      - name: Conserver les journaux
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: journaux-pipeline
+          path: |
+            outputs/pipeline_execution_log.txt
+            outputs/*_execution.log
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - uses: actions/deploy-pages@v4
+        id: deployment

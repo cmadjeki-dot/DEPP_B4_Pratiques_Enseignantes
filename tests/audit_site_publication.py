@@ -6,7 +6,8 @@ from pathlib import Path
 from urllib.parse import urldefrag, unquote, urljoin, urlsplit
 from urllib.request import Request, urlopen
 
-BASE = "https://cmadjeki-dot.github.io/DEPP_B4_Pratiques_Enseignantes/"
+BASE = (sys.argv[1] if len(sys.argv) > 1 else
+        "https://cmadjeki-dot.github.io/DEPP_B4_Pratiques_Enseignantes/").rstrip("/") + "/"
 PAGES = ["index.html", "reports/rapport_scientifique.html", "reports/annexes.html",
          "reports/note_decideur.html", "presentation/presentation_depp_b4.html"]
 
@@ -51,7 +52,9 @@ for relative in PAGES:
     parser.feed(text)
     for link in parser.links:
         target, fragment = urldefrag(urljoin(url, link))
-        if urlsplit(target).netloc != urlsplit(BASE).netloc or not target.startswith(BASE):
+        # Contrôler aussi les chemins à la racine du domaine : ils peuvent révéler
+        # une erreur de préfixe du projet lors du passage de local à GitHub Pages.
+        if urlsplit(target).netloc != urlsplit(BASE).netloc:
             continue
         code, content = fetch(target)
         ok = code == 200
@@ -68,7 +71,7 @@ with open("outputs/tables/audit_site_publie.csv", "w", encoding="utf-8", newline
     writer.writerow(["page", "cible", "succes", "statut_http"])
     writer.writerows(checks)
 failed = [row for row in checks if not row[2]]
-print(f"Contrôles publiés : {len(checks)} ; URL uniques : {len(cache)} ; échecs : {len(failed)}")
+print(f"Contrôles HTTP : {len(checks)} ; URL uniques : {len(cache)} ; échecs : {len(failed)}")
 for row in failed:
     print(row)
 sys.exit(bool(failed))

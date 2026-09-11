@@ -8,6 +8,8 @@
 
 Un démonstrateur de statistique publique qui relie conception d’enquête, production de données synthétiques, analyses et restitution automatisée. Il permet d’examiner les choix méthodologiques et leurs limites, du protocole au rapport destiné à un décideur.
 
+[Site publié](https://cmadjeki-dot.github.io/DEPP_B4_Pratiques_Enseignantes/) · [Rapport scientifique](https://cmadjeki-dot.github.io/DEPP_B4_Pratiques_Enseignantes/reports/rapport_scientifique.html) · [Note décideur](https://cmadjeki-dot.github.io/DEPP_B4_Pratiques_Enseignantes/reports/note_decideur.html)
+
 Le [README historique](README_historique.md) conserve intégralement la documentation précédente.
 
 ## Problématique
@@ -75,6 +77,8 @@ La réalisation documentée retrouve huit facteurs suggérés et deux profils ex
 ## Reproductibilité
 
 Graines fixées, paramètres versionnés, dépendances verrouillées avec renv, tests automatiques, journaux d’exécution et vérification des empreintes des résultats. Le premier calcul de l’analyse parallèle peut prendre plusieurs dizaines de minutes ; les caches ne sont réutilisés que si leurs clés concordent.
+
+La [reproduction sur GitHub Actions](https://github.com/cmadjeki-dot/DEPP_B4_Pratiques_Enseignantes/actions/runs/34579079810) a réussi : 76 tests, 831 vérifications et rendu Quarto. Le [bilan de publication](docs/checklist_publication.md) documente aussi le contrôle des charges entre environnements et les 180 vérifications HTTP du site public.
 
 ## Structure du dépôt
 

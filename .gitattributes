@@ -1,0 +1,2 @@
+# Préserver les octets de la référence déjà approuvée par la revue factorielle.
+metadata/loadings_efa_reference.csv -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

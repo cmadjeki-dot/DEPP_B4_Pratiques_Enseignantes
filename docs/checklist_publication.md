@@ -42,11 +42,19 @@ Le workflow sépare construction et déploiement, limite les droits Pages au sec
 
 ## Conditions d'activation distante
 
-L'authentification GitHub est désormais opérationnelle : push confirmé et API Pages consultée. La source Pages est déjà configurée sur `workflow`. Le premier build vierge a restauré renv et installé R/Quarto avec succès ; le recalcul statistique est en cours. Ne jamais écrire de jeton dans les sources ou la documentation.
+L'authentification GitHub est désormais opérationnelle : push confirmé et API Pages consultée. La source Pages est déjà configurée sur `workflow`. Le premier build vierge a restauré renv et installé R/Quarto avec succès, puis a bloqué sur la vérification des charges factorielles (incident détaillé ci-dessous). Ne jamais écrire de jeton dans les sources ou la documentation.
 
 Dans le dépôt GitHub, choisir **Settings → Pages → Build and deployment → Source : GitHub Actions**. Le workflow part sur un push vers `main` ou via **Actions → Reproduction et publication Quarto → Run workflow**. Les journaux sont conservés comme artefact même après un échec de calcul. Les étapes de rendu, tests et audit doivent réussir avant l'envoi de l'artefact Pages.
 
 URL cible, à ne présenter comme publiée qu'après contrôle :
 `https://cmadjeki-dot.github.io/DEPP_B4_Pratiques_Enseignantes/`.
 
-Le runner Windows et les versions R/Quarto correspondent au contexte local afin de limiter les différences numériques et d'encodage. Aucune empreinte de validation scientifique ne doit être actualisée automatiquement pour contourner un échec : si les charges factorielles diffèrent, une revue des résultats est nécessaire.
+Le runner Windows et les versions R/Quarto correspondent au contexte local afin de limiter les différences numériques et d'encodage. Aucune empreinte de validation scientifique ne doit être actualisée automatiquement pour contourner un échec.
+
+## Incident du premier build et correction contrôlée
+
+Le run `34575612681` a échoué en étape 10 : l'empreinte du CSV des charges différait. Le calcul avait retrouvé huit facteurs, mais ce seul constat ne suffit pas à autoriser les scores.
+
+La référence locale déjà approuvée est conservée dans `metadata/loadings_efa_reference.csv`, avec son empreinte originale inchangée. En cas d'empreinte différente du fichier recalculé, le contrôle exige les mêmes colonnes, items, facteurs et libellés, toutes les valeurs finies, et un écart absolu maximal de `1e-10` sur les charges. Ce seuil ne tolère que des différences numériques négligeables ; il ne permet ni permutation, ni changement de signe, ni changement substantiel de charges. La référence est protégée des conversions de fins de ligne par `.gitattributes`.
+
+Le nouveau contrôle est testé avec identité, perturbation de `1e-12`, écart de `0,001`, item modifié et valeur manquante. Le prochain build doit établir si l'écart distant est effectivement dans cette tolérance ; sinon, il restera bloqué et nécessitera une revue.

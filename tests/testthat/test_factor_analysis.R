@@ -1,3 +1,17 @@
+testthat::test_that("la référence accepte seulement les différences numériques négligeables", {
+  source("../../R/functions/scores_definitifs.R",encoding="UTF-8",local=TRUE)
+  ref <- read.csv("../../metadata/loadings_efa_reference.csv",fileEncoding="UTF-8",check.names=FALSE)
+  testthat::expect_equal(verifier_reference_charges(ref,ref),0)
+  proche <- ref; proche$F1[1] <- proche$F1[1]+1e-12
+  testthat::expect_lte(verifier_reference_charges(proche,ref),1e-10)
+  different <- ref; different$F1[1] <- different$F1[1]+.001
+  testthat::expect_error(verifier_reference_charges(different,ref),"Charges modifiées")
+  different <- ref; different$item[1] <- "AUTRE"
+  testthat::expect_error(verifier_reference_charges(different,ref),"Items")
+  different <- ref; different$F1[1] <- NA_real_
+  testthat::expect_error(verifier_reference_charges(different,ref),"non finies")
+})
+
 testthat::test_that("la factorisation globale produit une solution cohérente", {
   p <- read.csv("../../outputs/tables/parallel_global.csv")
   l <- read.csv("../../outputs/tables/loadings_efa.csv",check.names=FALSE)

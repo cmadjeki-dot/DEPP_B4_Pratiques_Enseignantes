@@ -1,11 +1,33 @@
 # Scores construits uniquement après revue explicite des facteurs et du contenu.
+verifier_reference_charges <- function(actuel, reference, tolerance=1e-10) {
+  if (!identical(names(actuel),names(reference)) || nrow(actuel)!=nrow(reference))
+    stop("Structure des charges différente de la référence validée.")
+  facteurs <- grep("^F[0-9]+$",names(reference),value=TRUE)
+  if (!length(facteurs) || !identical(actuel[setdiff(names(actuel),facteurs)],
+                                    reference[setdiff(names(reference),facteurs)]))
+    stop("Items, facteurs ou libellés différents de la référence validée.")
+  a <- as.matrix(actuel[facteurs]); b <- as.matrix(reference[facteurs])
+  if (!is.numeric(a) || !is.numeric(b) || any(!is.finite(a)) || any(!is.finite(b)))
+    stop("Charges non numériques ou non finies.")
+  ecart <- max(abs(a-b))
+  if (ecart > tolerance) stop("Charges modifiées : écart maximal = ",ecart,
+    ". Réexaminer la revue factorielle avant les scores.")
+  message("Référence factorielle : écart maximal = ",format(ecart,scientific=TRUE),
+          " ; tolérance numérique = ",tolerance)
+  invisible(ecart)
+}
+
 construire_scores_definitifs <- function(base,retenus,dimensions,cfg,exporter) {
   revue <- read.csv("metadata/revue_facteurs.csv",fileEncoding="UTF-8")
   stopifnot(all(c("facteur","dimension_theorique","interpretation","coherence","commentaire","score_autorise","empreinte_loadings") %in% names(revue)),
     !anyDuplicated(revue$facteur))
-  if(!all(revue$empreinte_loadings==unname(tools::md5sum("outputs/tables/loadings_efa.csv"))))
-    stop("Les charges ont changé : réexaminer metadata/revue_facteurs.csv avant de construire les scores.")
   l <- read.csv("outputs/tables/loadings_efa.csv",fileEncoding="UTF-8",check.names=FALSE)
+  if(!all(revue$empreinte_loadings==unname(tools::md5sum("outputs/tables/loadings_efa.csv")))) {
+    reference <- "metadata/loadings_efa_reference.csv"
+    if (!file.exists(reference) || !all(revue$empreinte_loadings==unname(tools::md5sum(reference))))
+      stop("Référence validée absente ou modifiée : réexaminer la revue factorielle.")
+    verifier_reference_charges(l,read.csv(reference,fileEncoding="UTF-8",check.names=FALSE))
+  }
   colonnes <- grep("^F[0-9]+$",names(l),value=TRUE)
   stopifnot(setequal(revue$facteur,colonnes))
   dict <- read.csv("metadata/dictionnaire_variables.csv",fileEncoding="UTF-8")

@@ -67,6 +67,10 @@ $RECYCLE.BIN/
 *.swo
 *~
 
+# Cache de l'audit Python des liens publics
+__pycache__/
+*.pyc
+
 **/*.quarto_ipynb
 
 /.quarto/

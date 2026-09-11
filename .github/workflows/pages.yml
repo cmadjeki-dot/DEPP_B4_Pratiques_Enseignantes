@@ -21,6 +21,8 @@ jobs:
         with:
           r-version: '4.6.0'
       - uses: r-lib/actions/setup-renv@v2
+        with:
+          bypass-cache: never
       - uses: quarto-dev/quarto-actions/setup@v2
         with:
           version: '1.10.18'
@@ -40,6 +42,8 @@ jobs:
           path: |
             outputs/pipeline_execution_log.txt
             outputs/*_execution.log
+            outputs/tables/loadings_efa.csv
+            outputs/tables/parallel_global.csv
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site

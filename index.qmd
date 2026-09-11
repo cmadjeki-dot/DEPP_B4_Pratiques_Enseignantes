@@ -9,4 +9,6 @@ Ce projet illustre la chaîne d’une étude statistique : construction d’une 
 
 Le [rapport scientifique](reports/rapport_scientifique.qmd) présente les résultats réellement calculés, leur incertitude et leurs limites. Les [annexes méthodologiques](reports/annexes.qmd) donnent accès au questionnaire, aux définitions et aux diagnostics détaillés.
 
+La [note décideur](reports/note_decideur.qmd) propose une lecture courte : cinq messages, huit indicateurs prioritaires et une figure de synthèse.
+
 La restitution charge les résultats du pipeline à chaque rendu. Elle ne réestime pas les modèles et ne transforme pas les hypothèses de simulation en constats empiriques sur les enseignants.

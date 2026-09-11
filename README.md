@@ -431,11 +431,13 @@ Le script de sorties charge les résultats existants et ne réestime pas les mod
 
 ## Rapport scientifique Quarto
 
-Le site comprend l’accueil, le rapport scientifique et ses annexes. Après exécution
+Le site comprend l’accueil, le rapport scientifique, ses annexes et la note décideur. Après exécution
 du pipeline jusqu’à `R/13_outputs.R`, lancer `quarto render` depuis la racine.
 Les HTML sont générés dans `_site/` ; `docs/` conserve la documentation source.
 Le rendu vérifie les empreintes des sorties avant de charger les chiffres.
-La note décideur n’est pas incluse tant qu’elle n’est pas rédigée.
+La note décideur figure dans la navigation ; elle reprend huit indicateurs prioritaires
+et cinq messages générés depuis les résultats calculés. Son rendu produit également
+`outputs/tables/messages_cles_decideur.md` et `outputs/figures/synthese_decideur.png`.
 
 Sur cette installation Windows, le lanceur Quarto nécessite un chemin sans espaces :
 
@@ -449,6 +451,11 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests/audit_rapport.ps1
 
 La configuration active uniquement HTML. Un format PDF pourra être ajouté après
 vérification d’un moteur LaTeX ; aucune dépendance PDF n’est installée ici.
+
+La note dispose aussi d’un PDF de trois pages dans `outputs/tables/note_decideur.pdf`,
+produit par impression de son HTML avec Edge déjà installé. Sa feuille de style
+prévoit des pages A4 ; pour le reproduire, imprimer la note HTML en PDF sans
+en-têtes ni pieds de page du navigateur. Aucun moteur LaTeX n’a été installé.
 
 Références techniques : [initialisation renv](https://pkgs.rstudio.com/renv/reference/init.html),
 [verrouillage des dépendances](https://rstudio.github.io/renv/reference/snapshot.html).

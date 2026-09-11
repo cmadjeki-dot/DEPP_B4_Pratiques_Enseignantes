@@ -1,7 +1,7 @@
 ﻿# Vérifier les pages finales sans modifier leurs contenus.
 $ErrorActionPreference = 'Stop'
 $racineSite = (Resolve-Path -LiteralPath '_site').Path
-$pages = @('index.html', 'reports/rapport_scientifique.html', 'reports/annexes.html')
+$pages = @('index.html', 'reports/rapport_scientifique.html', 'reports/annexes.html', 'reports/note_decideur.html')
 $controles = [System.Collections.Generic.List[object]]::new()
 foreach ($page in $pages) {
     $cheminPage = Join-Path $racineSite $page

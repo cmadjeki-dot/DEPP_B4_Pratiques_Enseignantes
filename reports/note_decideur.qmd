@@ -1,0 +1,104 @@
+---
+title: "Pratiques enseignantes : principaux enseignements du démonstrateur statistique"
+subtitle: "Synthèse méthodologique — données simulées"
+toc: false
+css: note_decideur.css
+---
+
+```{r}
+#| include: false
+source("R/functions/rapport.R",encoding="UTF-8")
+source("R/functions/note_decideur.R",encoding="UTF-8")
+r <- charger_rapport()
+note <- preparer_note_decideur(r)
+ps <- read.csv("outputs/tables/profils_scores.csv",fileEncoding="UTF-8")
+gaps <- r$scores[grepl("^GAP_",r$scores$indicateur),]
+positifs <- gaps[gaps$moyenne_ponderee>0,]
+```
+
+::: {.note-page}
+
+**Données simulées à des fins de démonstration méthodologique. Les résultats ne constituent pas des résultats officiels de la DEPP.**
+
+# Pourquoi cette étude ?
+
+Illustrer comment une enquête peut décrire les pratiques enseignantes, leurs conditions d’exercice et les priorités déclarées. Cette note présente une méthode de travail ; elle ne fonde pas une décision sur les enseignants réels.
+
+# Ce que l’on mesure
+
+Huit dimensions sont mesurées par des questions de fréquence, de « jamais » à « très souvent ». La **priorité** indique l’importance accordée à une pratique ; la **faisabilité** décrit sa possibilité de mise en œuvre. Ces mesures sont distinctes.
+
+# Comment l’étude est construite
+
+Une population fictive permet de tirer un échantillon réparti par degré, secteur et éducation prioritaire. Après simulation de la participation et contrôle des questionnaires, les réponses sont pondérées pour retrouver des caractéristiques connues de cette population. Les règles et exclusions restent traçables.
+
+# Cinq résultats principaux
+
+```{r}
+#| results: asis
+cat(paste(paste0(seq_along(note$messages),". ",note$messages),collapse="\n\n"))
+```
+
+:::
+
+::: {.note-page}
+
+# Typologie des pratiques
+
+Les profils sont une synthèse descriptive, sans jugement sur la compétence des enseignants. Leur séparation et leur stabilité sont faibles : ils ne doivent pas servir à attribuer une étiquette individuelle. Les parts ci-dessous portent sur les seuls enseignants classés ; les autres restent dans la base.
+
+```{r}
+#| results: asis
+for(i in seq_len(nrow(r$profils))) {
+  pr <- r$profils$profil_pratiques[i]
+  nom <- r$interpretations$nom_descriptif[match(pr,r$interpretations$profil)]
+  t <- ps[ps$profil_pratiques==pr & grepl("^SCORE_",ps$indicateur),]
+  haut <- t$dimension[order(t$moyenne_ponderee,decreasing=TRUE)][1:2]
+  bas <- t$dimension[order(t$moyenne_ponderee)][1:2]
+  cat("\n**",nom," — ",pct(r$profils$proportion_ponderee[i]),"**\n\n",sep="")
+  cat("- Taille pondérée parmi les classés ; les fréquences sont comparées relativement à l’autre groupe.\n")
+  cat("- Dimensions aux moyennes les plus élevées dans ce groupe : ",paste(note$dimensions[haut],collapse=" et "),".\n",sep="")
+  cat("- Dimensions relativement moins fréquentes : ",paste(note$dimensions[bas],collapse=" et "),".\n\n",sep="")
+}
+```
+
+![Vue d’ensemble des huit dimensions](../outputs/figures/synthese_decideur.png){#fig-synthese-decideur fig-alt="Moyennes pondérées et intervalles à 95 % des huit dimensions de pratiques."}
+
+Source : base analytique simulée. Chaque score utilise les réponses disponibles. Les traits expriment l’incertitude d’échantillonnage retenue ; ils ne couvrent pas toutes les incertitudes de mesure. Les autres dimensions complètent la figure sans ajouter de message prioritaire aux huit indicateurs sélectionnés.
+
+:::
+
+::: {.note-page}
+
+# Écarts entre priorité, faisabilité et pratique
+
+Un écart positif signifie que la priorité déclarée dépasse la fréquence de pratique sur les codes utilisés. Il ne démontre ni un manque de compétence, ni un besoin direct de formation. Les ancrages des questions diffèrent.
+
+```{r}
+#| results: asis
+if(nrow(positifs)) {
+  cat("Dans les données simulées, les écarts moyens positifs concernent :\n\n")
+  for(i in seq_len(nrow(positifs))) {
+    t <- positifs[i,]
+    cat("- **",note$dimensions[t$dimension],"** : ",ic(t$moyenne_ponderee,t$ic95_inf,t$ic95_sup)," point(s), intervalle à 95 %. ",if(t$ic95_inf<=0) "L’intervalle inclut zéro." else "L’intervalle exclut zéro, sans établir un besoin réel.","\n",sep="")
+  }
+} else cat("Aucun écart moyen positif n’est observé dans cette réalisation. Cela ne prouve pas l’absence de difficultés individuelles.\n")
+```
+
+Le calcul compare priorité et pratique chez les mêmes personnes ayant renseigné les deux mesures. Une faisabilité déclarée plus faible peut compléter l’examen des conditions d’exercice, mais elle ne constitue pas, à elle seule, une explication. Les comparaisons détaillées sont dans le [rapport scientifique](rapport_scientifique.qmd).
+
+# Points d’attention
+
+**Données entièrement simulées ; pratiques autodéclarées ; associations non causales ; typologie descriptive et peu stable ; plan de sondage et non-réponse simplifiés.** Les résultats ne décrivent pas la population réelle des enseignants.
+
+# Enseignements méthodologiques
+
+- Conserver les effectifs et les dénominateurs pour comprendre ce que représente chaque chiffre.
+- Examiner ensemble qualité, pondération et incertitude ; ne pas sélectionner les messages sur leur seule significativité.
+- Tester les échelles et les profils avant de les utiliser. Une collecte réelle exigerait un prétest et une validation externe.
+
+# Conclusion
+
+Le démonstrateur illustre une chaîne complète et vérifiable, de l’enquête à la restitution. Il montre aussi l’intérêt de signaler les résultats incertains et les profils instables. Sa portée est méthodologique : il prépare un raisonnement d’étude, sans fournir de recommandation opérationnelle sur les enseignants réels.
+
+:::

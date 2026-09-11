@@ -6,6 +6,7 @@ project:
     - index.qmd
     - reports/rapport_scientifique.qmd
     - reports/annexes.qmd
+    - reports/note_decideur.qmd
 
 lang: fr
 crossref:
@@ -23,6 +24,8 @@ website:
         text: Rapport scientifique
       - href: reports/annexes.qmd
         text: Annexes
+      - href: reports/note_decideur.qmd
+        text: Note décideur
   page-footer: "Données simulées — aucune statistique officielle de la DEPP."
 
 format:

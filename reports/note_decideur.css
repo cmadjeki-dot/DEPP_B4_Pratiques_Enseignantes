@@ -1,0 +1,18 @@
+.note-page { max-width: 850px; }
+.note-page p, .note-page li { line-height: 1.4; }
+@media print {
+  @page { size: A4; margin: 13mm; }
+  body { font-size: 10pt !important; }
+  main { width: 100% !important; max-width: none !important; margin: 0 !important; }
+  .note-page { max-width: none; }
+  .note-page + .note-page { break-before: page; }
+  h1 { font-size: 15pt !important; margin-top: 8pt !important; margin-bottom: 5pt !important; }
+  h2 { font-size: 12pt !important; }
+  p, li { margin-bottom: 5pt !important; }
+  #title-block-header { margin-bottom: 8pt !important; }
+  #title-block-header .title { font-size: 19pt !important; }
+  .quarto-title .subtitle { font-size: 12pt !important; }
+  figure { break-inside: avoid; }
+  figure img { max-height: 85mm; width: auto; }
+  nav, footer, .quarto-navigation-tool { display: none !important; }
+}

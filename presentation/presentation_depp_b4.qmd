@@ -1,0 +1,134 @@
+---
+title: "Pratiques enseignantes"
+subtitle: "Démonstrateur statistique — objectif : construire une chaîne d’étude reproductible"
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    transition: none
+    width: 1280
+    height: 800
+    margin: 0.08
+    center: false
+    footer: "Données simulées — aucun résultat officiel de la DEPP"
+    css: presentation.css
+toc: false
+number-sections: false
+execute:
+  echo: false
+---
+
+```{r}
+#| include: false
+source("R/functions/rapport.R",encoding="UTF-8")
+r <- charger_rapport()
+retenu <- r$clusters[r$clusters$retenue,]
+```
+
+## Problématique
+
+**Comment identifier et caractériser statistiquement différents profils de pratiques enseignantes et leurs associations avec les contextes professionnels ?**
+
+- Décrire plusieurs dimensions de pratiques déclarées.
+- Examiner les écarts entre priorité, faisabilité et pratique.
+- Tenir compte du sondage et de la qualité des réponses.
+- Distinguer illustration méthodologique et connaissance empirique.
+
+## Protocole d’enquête
+
+::: {.frise}
+Population synthétique → échantillonnage → questionnaire → contrôle qualité → pondération → psychométrie → typologie → modèles → restitution
+:::
+
+- Données individuelles entièrement simulées.
+- Traçabilité des règles, des transformations et des exclusions.
+- Résultats calculés avant rédaction ; aucune correction silencieuse.
+
+## Échantillonnage et pondération
+
+**N = `r fmt(sum(r$allocation$N_h),0)` · n = `r fmt(sum(r$allocation$n_h),0)` · `r nrow(r$allocation)` strates**
+
+- Tirage aléatoire sans remise par degré, secteur et éducation prioritaire.
+- Probabilités d’inclusion connues ; poids de base : $w_i=1/\pi_i$.
+- Correction de la non-réponse et des exclusions analytiques.
+- Calibration sur des marges connues de la population synthétique.
+
+**Point de vigilance :** le redressement ne garantit pas l’absence de biais.
+
+## Questionnaire et dimensions
+
+**48 items de pratiques · 8 dimensions · réponses de 1 à 5**
+
+| | |
+|---|---|
+| EXP — Enseignement explicite | DIF — Différenciation |
+| EVA — Évaluation formative | GCL — Gestion de classe |
+| COL — Collaboration | NUM — Numérique pédagogique |
+| DEV — Développement professionnel | REL — Relations éducatives |
+
+Faisabilité, priorité et contrôles complètent l’instrument. Les contrôles ne sont pas intégrés aux échelles principales.
+
+## Psychométrie et analyse factorielle
+
+::: {.columns}
+::: {.column width="46%"}
+- Corrélations polychorïques des items ordinaux.
+- Alpha / oméga, contenu et cohérence des items.
+- Analyse parallèle : `r r$parallel$facteurs_suggeres` facteurs suggérés.
+- Analyse factorielle avec rotation oblique.
+
+**Examiner les scores avant de les utiliser.** Validation externe non établie.
+:::
+::: {.column width="54%"}
+![](../outputs/figures/parallel_global.png){fig-alt="Analyse parallèle globale : valeurs propres observées et référence par permutations."}
+:::
+:::
+
+## Principaux résultats descriptifs
+
+![](../outputs/figures/synthese_decideur.png){height=440 fig-alt="Moyennes pondérées et intervalles à 95 % des huit dimensions."}
+
+Les fréquences diffèrent entre dimensions ; les difficultés simulées des items contribuent à ces différences. **Ce n’est pas un classement de qualité pédagogique.**
+
+## Typologie des pratiques
+
+![](../outputs/figures/profils_heatmap.png){height=390 fig-alt="Moyennes des huit dimensions dans les deux profils exploratoires."}
+
+- **Profil 1 (`r pct(r$profils$proportion_ponderee[1])`) :** pratiques déclarées moins fréquentes, notamment numériques.
+- **Profil 2 (`r pct(r$profils$proportion_ponderee[2])`) :** pratiques déclarées plus fréquentes, contraste numérique marqué.
+
+::: {.petit}
+Parts pondérées parmi les classés. Séparation faible (silhouette `r fmt(retenu$silhouette_moyenne,3)`) et stabilité limitée : aucune catégorie naturelle démontrée.
+:::
+
+## Modélisation et principaux enseignements
+
+**Modèles pondérés ; associations, sans causalité.**
+
+- Bon équipement versus faible : **`r association(r,"mod_num_final","equipement_numeriqueBon")` point(s)** de score NUM, avec IC à 95 %.
+- Contrainte déclarée et GAP_DIF : **`r association(r,"mod_gap_final","CONTRAINTE_DIF")`** ; l’incertitude ne doit pas être masquée.
+- Sensibilités de pondération, de qualité et de forme des relations.
+
+**Enseignement :** une chaîne rigoureuse peut produire un résultat peu concluant, qui mérite d’être restitué comme tel.
+
+## Ce que ce projet démontre
+
+::: {.columns}
+::: {.column width="50%"}
+- Conception d’enquête
+- Méthodologie de sondage
+- Contrôle qualité
+- Pondération
+- Programmation R
+:::
+::: {.column width="50%"}
+- Psychométrie
+- Analyses multivariées
+- Restitution décisionnelle
+- Reproductibilité Git / Quarto
+:::
+:::
+
+**Une chaîne vérifiable, du protocole aux livrables, avec des limites explicites.**
+
+Les résultats ne décrivent pas la population réelle des enseignants.

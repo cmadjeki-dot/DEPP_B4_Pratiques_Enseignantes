@@ -7,6 +7,7 @@ project:
     - reports/rapport_scientifique.qmd
     - reports/annexes.qmd
     - reports/note_decideur.qmd
+    - presentation/presentation_depp_b4.qmd
 
 lang: fr
 crossref:

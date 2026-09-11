@@ -457,5 +457,15 @@ produit par impression de son HTML avec Edge déjà installé. Sa feuille de sty
 prévoit des pages A4 ; pour le reproduire, imprimer la note HTML en PDF sans
 en-têtes ni pieds de page du navigateur. Aucun moteur LaTeX n’a été installé.
 
+## Présentation pour l’entretien
+
+La [présentation](presentation/presentation_depp_b4.qmd) comporte dix diapositives
+et un [script oral](presentation/script_oral.md) de neuf minutes, incluant le temps
+de lecture des figures. Elle reprend les résultats calculés et les limites de la
+typologie. Après le pipeline et le rendu de la note décideur, lancer
+`quarto render presentation/presentation_depp_b4.qmd` ; le diaporama HTML est créé
+dans `_site/presentation/presentation_depp_b4.html`. Le rendu global l’inclut aussi.
+Les flèches du clavier permettent de naviguer entre les diapositives.
+
 Références techniques : [initialisation renv](https://pkgs.rstudio.com/renv/reference/init.html),
 [verrouillage des dépendances](https://rstudio.github.io/renv/reference/snapshot.html).

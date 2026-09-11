@@ -1,0 +1,223 @@
+---
+title: "Observatoire statistique des pratiques enseignantes"
+subtitle: "Démonstrateur méthodologique d'une étude statistique sur les pratiques professionnelles des enseignants"
+---
+
+**Données simulées à des fins de démonstration méthodologique. Les résultats présentés ne constituent pas des résultats officiels de la DEPP.**
+
+```{r}
+#| label: chargement
+#| include: false
+source("R/functions/rapport.R",encoding="UTF-8")
+r <- charger_rapport()
+retenu <- r$clusters[r$clusters$retenue,]
+sc <- r$scores[grepl("^SCORE_",r$scores$indicateur),]
+gaps <- read.csv("outputs/tables/gap_par_profil.csv",fileEncoding="UTF-8")
+g1 <- gaps[gaps$profil==r$profils$profil_pratiques[1],]
+gmax <- g1[which.max(g1$moyenne_ponderee),]
+contrainte <- r$modeles[r$modeles$modele=="mod_gap_final" & r$modeles$terme=="CONTRAINTE_DIF",]
+```
+
+# Résumé
+
+Ce démonstrateur reproduit une étude des pratiques déclarées à partir d’une population de `r fmt(sum(r$allocation$N_h),0)` enseignants fictifs. Un échantillon stratifié de `r fmt(sum(r$allocation$n_h),0)` unités donne `r fmt(r$qualite$nb_repondants,0)` répondants simulés, soit `r pct(r$qualite$taux_reponse)`. La base analytique comprend `r fmt(nrow(r$base),0)` observations après contrôle qualité.
+
+Les analyses décrivent huit dimensions de pratiques, examinent leurs propriétés psychométriques et construisent une partition exploratoire en `r nrow(r$profils)` profils. Sa silhouette moyenne de `r fmt(retenu$silhouette_moyenne,3)` invite à ne pas interpréter les groupes comme des catégories naturelles. Les modèles pondérés documentent des associations conditionnelles, sans inférence causale. Tous les résultats numériques ci-dessous proviennent des fichiers calculés par le pipeline.
+
+# Contexte
+
+L’étude des pratiques enseignantes exige de distinguer les déclarations individuelles, leurs conditions d’exercice et les instruments utilisés pour les mesurer. Le projet reproduit cette articulation dans un cadre entièrement synthétique. Il ne décrit ni une enquête conduite par la DEPP ni la distribution réelle des pratiques dans le système éducatif.
+
+# Problématique
+
+Quels profils de pratiques professionnelles peut-on identifier à partir des déclarations d’enseignement explicite, de différenciation, d’évaluation formative, de gestion de classe, de collaboration, d’usage pédagogique du numérique, de développement professionnel et de relations éducatives ? Une seconde question concerne les écarts entre fréquence déclarée, faisabilité et priorité.
+
+# Objectifs
+
+L’étude vise à construire un dispositif d’enquête cohérent, expliciter le traitement de la qualité et du sondage, produire des indicateurs pondérés et examiner la structure des mesures. Elle explore ensuite les profils multivariés et leurs associations avec le contexte. La restitution doit rester traçable et reproductible, y compris lorsque les résultats sont peu discriminants ou incertains.
+
+# Méthodologie
+
+La démarche sépare la génération des données, leur audit, les règles d’inclusion et l’analyse. Les informations réservées au simulateur ne servent pas à décider de la qualité des réponses. Les données brutes sont préservées ; les transformations et exclusions sont consignées.
+
+Les descriptions et régressions utilisent le plan d’enquête calibré. La psychométrie, l’analyse factorielle et la classification sont exploratoires et non pondérées : leurs résultats concernent la structure de l’instrument dans les cas analysés, et non une estimation représentative de la population enseignante réelle. Les dénominateurs sont propres à chaque indicateur ; aucune imputation générale n’est réalisée.
+
+# Questionnaire
+
+L’instrument comporte six items pour chacune des huit dimensions : EXP, DIF, EVA, GCL, COL, NUM, DEV et REL. Les 48 réponses de pratique vont de 1 (« Jamais ») à 5 (« Très souvent »). Huit questions de faisabilité et huit de priorité complètent ces blocs, avec leurs propres ancrages ordinaux. Quatre contrôles sont exclus des échelles principales ; CTRL02 et CTRL04 sont orientés à l’inverse et leur recodage exploratoire est explicite.
+
+Comparer directement priorité et fréquence suppose une convention de métrique : le GAP décrit une différence de codes, pas un besoin objectivement mesuré. Le [questionnaire complet figure en annexe](annexes.qmd#sec-questionnaire).
+
+# Population et plan de sondage
+
+La population synthétique couvre premier degré et collège, public et privé sous contrat, éducation prioritaire et territoires urbains, périurbains ou ruraux. Les enseignants du privé sont classés Hors EP par convention de simulation. Le premier degré est polyvalent ; le collège comprend plusieurs disciplines.
+
+Le tirage est aléatoire simple sans remise dans chacune des huit strates opérationnelles croisant degré, secteur et éducation prioritaire. L’allocation est fixée avant tirage ; elle n’est pas proportionnelle partout. Pour une strate $h$ de taille $N_h$ et une allocation $n_h$ :
+
+$$\pi_h=\frac{n_h}{N_h},\qquad w_h=\frac{1}{\pi_h}=\frac{N_h}{n_h}.$$
+
+L’unité statistique et de tirage est l’enseignant fictif. Aucun regroupement réel par établissement n’est reproduit. Le détail de l’allocation est fourni dans les [annexes](annexes.qmd#sec-sondage).
+
+# Simulation des données
+
+Les caractéristiques individuelles sont générées sous contraintes de cohérence entre âge, ancienneté, secteur et contexte. Les paramètres sont des choix de démonstration, pas des estimations officielles.
+
+Les huit traits continus sont issus d’une loi normale multivariée dont la matrice théorique est positive définie et modérément corrélée. Des associations contextuelles modérées et du bruit sont ajoutés. Une réponse latente combine le trait, une saturation propre à l’item et une erreur ; des seuils variables la transforment en cinq modalités. Les items ne sont donc pas tirés indépendamment.
+
+La participation est simulée par un mécanisme logistique dépendant de caractéristiques observées. Les manquants partiels, la concentration des omissions en fin de questionnaire, les durées courtes et les réponses uniformes sont introduits séparément. **Les dépendances statistiques intégrées aux données sont des hypothèses de simulation et ne constituent pas des résultats empiriques sur les enseignants.**
+
+# Contrôle qualité
+
+Le référentiel distingue structure, identifiants, domaines, cohérences, complétion, temps de réponse et straightlining. Les durées courtes et réponses uniformes constituent des alertes, pas des preuves isolées d’invalidité. La base brute contient `r fmt(r$qualite$nb_reponses_rapides,0)` réponses rapides et `r fmt(r$qualite$nb_straightlining,0)` alertes de straightlining ; ces catégories peuvent se chevaucher.
+
+La règle principale exige au moins la moitié des questions et au moins 24 items de pratiques valides. Elle traite les doublons selon une priorité reproductible et exclut certains cumuls d’alertes graves. Les cas suffisamment renseignés ne sont pas exclus sur leur seul statut d’abandon. Au total, `r fmt(r$qualite$nb_repondants-nrow(r$base),0)` questionnaires répondants ne sont pas retenus. Les critères détaillés et diagnostics sont disponibles en annexe.
+
+# Pondération
+
+La correction de non-réponse porte sur les observations analytiques incluses, donc sur la non-participation et les exclusions qualité. Dans chaque cellule, le poids de base est multiplié par le rapport sélectionnés/inclus. Cette correction suppose une comparabilité suffisante des inclus et non-inclus au sein de la cellule, sans garantir l’absence de biais résiduel.
+
+La calibration utilise une distance logit avec multiplicateurs bornés entre 0,5 et 2. Elle conserve les totaux des huit strates, donc les marges degré, secteur et EP, et ajoute le sexe et le total de la durée `anciennete_classe`. Cette dernière est une variable numérique, non une tranche d’ancienneté. Aucun score de pratique n’entre dans les contraintes. Le plan final conserve les informations de calibration pour les variances. Les détails des marges et diagnostics figurent en annexe. Les incertitudes restent conditionnelles au plan de travail : toute l’incertitude de simulation, de non-réponse ou de construction des scores n’est pas propagée.
+
+# Analyses descriptives
+
+Le @tbl-echantillon conserve les effectifs observés et distingue les distributions pondérées et non pondérées. Les IC quasi nuls d’une marge calibrée traduisent une contrainte du redressement, pas une précision empirique exceptionnelle. Les tableaux détaillés incluent les variables continues et les dénominateurs disponibles.
+
+```{r}
+#| label: tbl-echantillon
+#| tbl-cap: "Caractéristiques de l’échantillon analytique — variables catégorielles"
+t <- r$table1[r$table1$type=="categorielle",]
+table_rapport(data.frame(Variable=t$variable,Modalité=t$modalite,n=t$n_non_pondere,
+  `% observé`=fmt(t$pourcentage_non_pondere,1),`% pondéré [IC 95 %]`=ic(t$pourcentage_pondere,t$ic95_inf,t$ic95_sup,1),check.names=FALSE))
+```
+
+Source : base analytique simulée ; poids finaux calibrés. Les proportions utilisent les réponses disponibles par variable.
+
+```{r}
+#| label: fig-distribution
+#| fig-cap: "Distributions pondérées des scores de pratique retenus"
+#| fig-alt: "Histogrammes des huit scores sur l’échelle de 1 à 5."
+#| fig-width: 10
+#| fig-height: 6
+source("R/functions/theme_depp_demo.R",encoding="UTF-8")
+long <- do.call(rbind,lapply(sub("SCORE_","",sc$indicateur),function(d)
+  data.frame(dimension=d,score=r$base[[paste0("SCORE_",d)]],poids=r$base$poids_final)))
+long <- long[!is.na(long$score),]
+ggplot2::ggplot(long,ggplot2::aes(score,weight=poids,y=ggplot2::after_stat(density))) +
+  ggplot2::geom_histogram(binwidth=.5,boundary=.75,fill="#2166AC",colour="white") +
+  ggplot2::facet_wrap(~dimension,ncol=4) + ggplot2::scale_x_continuous(breaks=1:5) +
+  ggplot2::labs(x="Score de pratique (1–5)",y="Densité pondérée",caption=mention_demo) + theme_depp_demo()
+```
+
+Source : base analytique simulée. Chaque panneau utilise les scores disponibles ; l’aire est normalisée à un. La validation interne qui autorise ces scores est décrite dans les sections suivantes.
+
+# Validation psychométrique
+
+L’examen combine distributions, effets plafond/plancher, relations item-total, corrélations polychorïques, alpha, oméga, adéquation factorielle et contenu des items. Aucun item n’est supprimé sur le seul critère de l’alpha. Les analyses par bloc utilisent les cas complets sur les six items ; les effectifs sont explicités dans le @tbl-psychometrie.
+
+```{r}
+#| label: tbl-psychometrie
+#| tbl-cap: "Fidélité exploratoire par dimension"
+t <- r$psycho
+table_rapport(data.frame(Dimension=t$dimension,`Cas complets`=t$n_complets,`Alpha brut`=t$alpha_brut,`Oméga ordinal`=t$omega_total_ordinal,check.names=FALSE))
+```
+
+Source : items simulés, analyse non pondérée. L’alpha sur les codes observés et l’oméga du modèle latent ordinal ne mesurent pas exactement la même quantité. L’oméga suppose un modèle congénérique à erreurs non corrélées ; une valeur élevée ne prouve ni unidimensionnalité ni validité externe.
+
+Les alphas observés vont de `r fmt(min(r$psycho$alpha_brut),3)` à `r fmt(max(r$psycho$alpha_brut),3)`. Leur niveau est compatible avec la structure introduite par la simulation ; il ne valide pas l’usage de l’instrument auprès d’enseignants réels.
+
+# Analyse factorielle
+
+L’analyse parallèle globale porte sur `r fmt(r$parallel$n_complets,0)` cas complets et `r r$parallel$nb_items` items. Elle suggère `r r$parallel$facteurs_suggeres` facteurs, à comparer aux `r r$parallel$facteurs_theoriques` dimensions théoriques. L’extraction minres et la rotation oblimin autorisent des facteurs corrélés. La lecture du contenu accompagne les charges et les éventuelles charges croisées ; une concordance numérique avec le modèle générateur ne constitue pas une validation externe.
+
+![Analyse parallèle globale des items retenus](../outputs/figures/parallel_global.png){#fig-parallele fig-alt="Valeurs propres observées et référence issue de permutations."}
+
+Source : items simulés, corrélations polychorïques, cas complets non pondérés. La référence repose sur des permutations des items ; le nombre de facteurs dépend aussi de l’incertitude Monte-Carlo et de la lecture conceptuelle.
+
+Les scores retenus sont les moyennes des items autorisés, sous condition de complétion. Les règles propres à chaque dimension sont annexées. Leur standardisation conserve les scores 1–5 et ajoute des Z pour les analyses multivariées.
+
+```{r}
+#| label: tbl-scores
+#| tbl-cap: "Scores de pratique — moyennes pondérées et incertitude"
+table_rapport(data.frame(Dimension=sc$dimension,n=sc$n,`Moyenne [IC 95 %]`=ic(sc$moyenne_ponderee,sc$ic95_inf,sc$ic95_sup),`Écart-type pondéré`=sc$ecart_type_pondere,check.names=FALSE))
+```
+
+Source : base analytique simulée ; réponses disponibles par score et plan calibré. Les comparaisons de niveau entre dimensions restent sensibles aux contenus et aux seuils des items.
+
+# Typologie
+
+L’ACP explore les scores standardisés sans remplacer l’analyse factorielle des items. La CAH utilise la distance euclidienne et Ward.D2 sur les huit Z complets. Les solutions de deux à six classes sont comparées par silhouette, inertie, tailles, stabilité et interprétation. La partition retenue porte sur `r fmt(sum(r$profils$n),0)` enseignants ; `r fmt(sum(is.na(r$base$CLUSTER_ID)),0)` restent non classés sans être supprimés de la base.
+
+```{r}
+#| label: tbl-profils
+#| tbl-cap: "Profils exploratoires de pratiques"
+t <- merge(r$profils,r$interpretations,by.x="profil_pratiques",by.y="profil",sort=FALSE)
+table_rapport(data.frame(Profil=t$profil_pratiques,Description=t$nom_descriptif,n=t$n,`Part pondérée`=pct(t$proportion_ponderee),check.names=FALSE))
+```
+
+Source : classification non pondérée ; parts pondérées parmi les seuls classés. Les noms comparent les fréquences déclarées entre groupes, sans jugement de qualité professionnelle.
+
+![Scores de pratique selon le profil](../outputs/figures/final_profils_scores.png){#fig-profils fig-alt="Moyennes et IC des huit dimensions par profil."}
+
+Source : base analytique simulée, poids finaux. Les IC sont conditionnels à la partition et ne représentent pas l’incertitude de classification.
+
+L’ARI moyen de stabilité par sous-échantillonnage vaut `r fmt(retenu$stabilite_ARI_moyenne,3)`. La concordance CAH/k-means est de `r fmt(r$robustesse$ARI[r$robustesse$comparaison=="CAH / k-means"],3)`. La stabilité est faible : les profils représentent principalement un gradient de déclaration, pas des types pédagogiques fermement établis.
+
+# Modélisation
+
+Les modèles gaussiens pondérés étudient DIF, EVA, NUM et GAP_DIF ; la logistique compare le profil 2 au profil 1. Ils utilisent des cas complets propres à chaque réponse. Les spécifications progressives d’une même réponse sont ajustées sur les mêmes individus. L’âge et l’ancienneté ne sont pas inclus simultanément ; les autres covariables sont choisies selon leur pertinence et leur redondance, pas seulement selon leur p-value.
+
+Les variantes quadratiques et l’interaction équipement × degré sont conservées comme examens ciblés. Le modèle principal reste parcimonieux. Les sensibilités comparent pondération et règles qualité, sans recalibrer les poids après restriction stricte. Les diagnostics de résidus, influence et colinéarité n’entraînent aucune exclusion automatique.
+
+```{r}
+#| label: tbl-modeles
+#| tbl-cap: "Associations sélectionnées dans les modèles finaux"
+choix <- list(mod_dif_final=c("formation_continue","SCORE_DEV"),mod_eva_final=c("formation_continue","SCORE_EXP"),mod_num_final="equipement_numeriqueBon",mod_gap_final="CONTRAINTE_DIF",mod_profil_final=c("formation_continue","equipement_numeriqueBon"))
+t <- do.call(rbind,lapply(names(choix),function(n) r$modeles[r$modeles$modele==n & r$modeles$terme %in% choix[[n]],]))
+table_rapport(data.frame(Réponse=t$variable_dependante,Association=t$terme,`Coefficient ou OR [IC 95 %]`=ic(t$effet,t$effet_ic95_inf,t$effet_ic95_sup,3),n=t$n,check.names=FALSE))
+```
+
+Source : modèles survey sur données simulées. Les coefficients gaussiens sont en points ; la logistique présente des odds ratios du profil 2 versus 1. Formation : un jour supplémentaire. Équipement Bon : référence Faible. Les autres scores sont sur 1–5. Les coefficients complets et références figurent en annexe. Les OR ne sont pas des rapports de probabilités.
+
+![Probabilités ajustées d’appartenance au profil 2](../outputs/figures/predicted_profiles.png){#fig-probabilites fig-alt="Probabilités prédites et IC selon équipement et jours de formation."}
+
+Source : logistique pondérée simulée. Standardisation sur les covariables observées ; IC delta conditionnels aux classes et à la distribution empirique des covariables. Ces configurations sont descriptives et ne représentent pas des interventions causales.
+
+# Résultats principaux
+
+Le @tbl-scores donne les estimations et IC de chaque score. Les écarts entre dimensions dépendent en partie des difficultés d’items fixées par le simulateur ; un classement des moyennes ne démontre donc pas une hiérarchie réelle des pratiques.
+
+![Pratique, faisabilité et priorité](../outputs/figures/final_pratiques_faisabilite_priorite.png){#fig-priorites fig-alt="Moyennes pondérées et intervalles par dimension pour pratique, faisabilité et priorité."}
+
+Source : base analytique simulée. Les trois mesures ont des ancrages différents et des dénominateurs disponibles propres ; le GAP est calculé séparément sur les paires renseignées.
+
+L’association ajustée entre bon équipement et NUM est de `r association(r,"mod_num_final","equipement_numeriqueBon")` point(s), IC 95 %, par rapport à un équipement faible. Pour EVA, l’association à un jour supplémentaire de formation est de `r association(r,"mod_eva_final","formation_continue")` point(s). Leur amplitude doit être appréciée sur l’échelle 1–5, indépendamment de la seule exclusion de zéro par l’IC.
+
+Dans le premier profil, l’écart moyen priorité–pratique le plus élevé concerne `r gmax$dimension` : `r ic(gmax$moyenne_ponderee,gmax$ic95_inf,gmax$ic95_sup,3)` point(s), IC 95 %, sur `r fmt(gmax$n,0)` paires disponibles. Ce constat décrit un écart déclaré, sans prouver un besoin de mise en œuvre.
+
+Pour GAP_DIF, le coefficient de contrainte déclarée vaut `r association(r,"mod_gap_final","CONTRAINTE_DIF")`. `r if(contrainte$ic95_inf<=0 && contrainte$ic95_sup>=0) "L’IC inclut zéro : l’hypothèse d’un écart croissant avec la contrainte n’est pas étayée de manière concluante." else "L’IC exclut zéro ; le sens et l’amplitude de l’association doivent être interprétés sans causalité."` Le R² descriptif du modèle vaut `r fmt(r$diagnostics$R2_descriptif[r$diagnostics$modele=="mod_gap_final"],3)` : ce diagnostic décrit l’ajustement, sans valider un mécanisme explicatif.
+
+# Discussion
+
+Le démonstrateur montre qu’un pipeline peut produire des résultats techniquement cohérents sans qu’ils deviennent pour autant des connaissances sur la population réelle. La fidélité et la structure factorielle reflètent notamment les dépendances utilisées pour générer les réponses. Leur examen reste nécessaire pour détecter des défauts du dispositif, mais insuffisant pour établir une validité externe.
+
+Les profils rendent lisible un gradient multivarié ; leur faible stabilité limite une utilisation individuelle ou décisionnelle. Les écarts priorité–pratique sont des écarts déclarés, et non des besoins réels prouvés. Les associations avec formation ou équipement illustrent l’ajustement statistique, sans isoler un mécanisme causal. L’intérêt méthodologique réside dans la confrontation des spécifications, des dénominateurs et de l’incertitude, y compris lorsque l’association attendue reste peu étayée.
+
+# Limites
+
+- Les données individuelles sont entièrement simulées ; les comportements répondent à des hypothèses techniques.
+- L’étude n’autorise aucune inférence causale. Les covariables et pratiques sont contemporaines.
+- Les pratiques sont déclaratives : une collecte réelle serait exposée aux biais de mémoire et de désirabilité sociale.
+- Le plan de sondage est simplifié, notamment sans dépendance réelle entre enseignants d’un même établissement.
+- La non-réponse et ses corrections sont simplifiées ; la calibration ne garantit pas l’élimination du biais.
+- Les échelles n’ont pas fait l’objet d’une validation externe ou d’un prétest auprès d’enseignants réels.
+- La psychométrie non pondérée et les cas complets peuvent sélectionner une sous-population particulière.
+- Le clustering dépend des scores, de la distance, de la méthode et du nombre de classes ; sa faible stabilité est observée et non masquée.
+- Les IC ne propagent pas toute l’incertitude des étapes successives. Les comparaisons multiples restent exploratoires.
+
+# Conclusion
+
+La chaîne mise en œuvre permet de construire un dispositif d’enquête, gérer les probabilités d’inclusion, tracer la qualité, corriger les poids et produire des indicateurs. Elle examine la cohérence interne des échelles, explore la structure factorielle et les profils, puis ajuste des modèles associatifs. La restitution automatisée relie chaque estimation aux résultats calculés. Cette capacité méthodologique ne transforme pas la simulation en résultat empirique : la validation externe et une collecte réelle resteraient indispensables.
+
+# Annexes méthodologiques
+
+Les [annexes](annexes.qmd) présentent le questionnaire, les dictionnaires, l’allocation, les contrôles qualité, les résultats psychométriques détaillés, les charges factorielles, les sensibilités et les diagnostics des modèles.

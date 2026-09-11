@@ -429,5 +429,26 @@ catalogue des indicateurs et `outputs/models/resultats_quarto.rds`. Le manifeste
 des sorties distingue les figures finales homogènes des explorations antérieures.
 Le script de sorties charge les résultats existants et ne réestime pas les modèles.
 
+## Rapport scientifique Quarto
+
+Le site comprend l’accueil, le rapport scientifique et ses annexes. Après exécution
+du pipeline jusqu’à `R/13_outputs.R`, lancer `quarto render` depuis la racine.
+Les HTML sont générés dans `_site/` ; `docs/` conserve la documentation source.
+Le rendu vérifie les empreintes des sorties avant de charger les chiffres.
+La note décideur n’est pas incluse tant qu’elle n’est pas rédigée.
+
+Sur cette installation Windows, le lanceur Quarto nécessite un chemin sans espaces :
+
+```powershell
+$env:LC_ALL = 'French_France.utf8'
+$env:LANG = 'French_France.utf8'
+$env:QUARTO_R = 'C:\PROGRA~1\R\R-4.6.0\bin'
+& 'C:\PROGRA~1\Quarto\bin\quarto.cmd' render
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests/audit_rapport.ps1
+```
+
+La configuration active uniquement HTML. Un format PDF pourra être ajouté après
+vérification d’un moteur LaTeX ; aucune dépendance PDF n’est installée ici.
+
 Références techniques : [initialisation renv](https://pkgs.rstudio.com/renv/reference/init.html),
 [verrouillage des dépendances](https://rstudio.github.io/renv/reference/snapshot.html).

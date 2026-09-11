@@ -1,0 +1,12 @@
+---
+title: "Pratiques enseignantes : un démonstrateur statistique"
+number-sections: false
+---
+
+**Données simulées à des fins de démonstration méthodologique. Les résultats présentés ne constituent pas des résultats officiels de la DEPP et ne décrivent pas la population réelle des enseignants.**
+
+Ce projet illustre la chaîne d’une étude statistique : construction d’une population synthétique, sondage, collecte simulée, contrôle qualité, pondération, psychométrie, classification et modélisation associative.
+
+Le [rapport scientifique](reports/rapport_scientifique.qmd) présente les résultats réellement calculés, leur incertitude et leurs limites. Les [annexes méthodologiques](reports/annexes.qmd) donnent accès au questionnaire, aux définitions et aux diagnostics détaillés.
+
+La restitution charge les résultats du pipeline à chaque rendu. Elle ne réestime pas les modèles et ne transforme pas les hypothèses de simulation en constats empiriques sur les enseignants.

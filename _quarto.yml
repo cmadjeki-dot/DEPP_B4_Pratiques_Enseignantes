@@ -1,0 +1,41 @@
+project:
+  type: website
+  output-dir: _site
+  execute-dir: project
+  render:
+    - index.qmd
+    - reports/rapport_scientifique.qmd
+    - reports/annexes.qmd
+
+lang: fr
+crossref:
+  tbl-title: Tableau
+  tbl-prefix: tableau
+  fig-title: Figure
+  fig-prefix: figure
+website:
+  title: "Pratiques enseignantes — démonstrateur"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Accueil
+      - href: reports/rapport_scientifique.qmd
+        text: Rapport scientifique
+      - href: reports/annexes.qmd
+        text: Annexes
+  page-footer: "Données simulées — aucune statistique officielle de la DEPP."
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    code-fold: true
+
+execute:
+  echo: false
+  warning: true
+  error: false
+  cache: false
+  freeze: false

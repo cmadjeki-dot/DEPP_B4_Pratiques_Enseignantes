@@ -1,0 +1,160 @@
+---
+title: "Annexes méthodologiques"
+subtitle: "Questionnaire, référentiels et diagnostics du démonstrateur"
+---
+
+**Données simulées à des fins de démonstration méthodologique. Les résultats présentés ne constituent pas des résultats officiels de la DEPP et ne décrivent pas la population réelle des enseignants.**
+
+```{r}
+#| include: false
+source("R/functions/rapport.R",encoding="UTF-8")
+r <- charger_rapport()
+```
+
+Ces annexes complètent le [rapport scientifique](rapport_scientifique.qmd). Les tableaux détaillés sont exploratoires ; la présence d’une valeur calculée ne constitue pas une validation externe.
+
+# Questionnaire {#sec-questionnaire}
+
+```{r}
+#| results: asis
+questionnaire <- readLines("questionnaire/questionnaire_complet.md",encoding="UTF-8",warn=FALSE)
+questionnaire <- sub("^(#+) ","##\\1 ",questionnaire)
+cat(paste(questionnaire,collapse="\n"))
+```
+
+# Dictionnaires
+
+## Variables du questionnaire
+
+```{r}
+table_rapport(read.csv("metadata/dictionnaire_variables.csv",fileEncoding="UTF-8"))
+```
+
+## Indicateurs publiés
+
+Les dénominateurs diffèrent selon les réponses disponibles. Les proportions de profils concernent les seuls cas classés.
+
+```{r}
+table_rapport(r$catalogue[c("code_indicateur","definition","numerateur","denominateur","population","ponderation","unite","statut_validation")])
+```
+
+## Base analytique
+
+Les domaines observés des identifiants individuels ne sont pas reproduits dans le site.
+
+```{r}
+d <- read.csv("metadata/dictionnaire_base_analytique.csv",fileEncoding="UTF-8")
+table_rapport(d[c("variable","libelle","type","minimum","maximum","n_manquants","description")])
+```
+
+# Population et sondage {#sec-sondage}
+
+Le tirage sans remise est indépendant entre strates. Les probabilités et poids sont constants à l’intérieur de chaque strate : $\pi_h=n_h/N_h$ et $w_h=N_h/n_h$. L’allocation est contrôlée avant tirage et la somme des poids initiaux restitue les effectifs de la population synthétique.
+
+```{r}
+#| label: tbl-allocation
+#| tbl-cap: "Allocation et probabilités d’inclusion"
+table_rapport(r$allocation)
+```
+
+# Simulation et non-réponse
+
+Le modèle de participation est une Bernoulli conditionnelle au contexte, dont la probabilité suit un logit. Les taux ci-dessous ne sont pas des résultats sur la participation réelle des enseignants. Les traits suivent une structure corrélée, puis des seuils propres aux items génèrent les codes ordinaux.
+
+```{r}
+table_fichier("taux_reponse")
+```
+
+# Critères qualité
+
+Les règles séparent erreurs techniques et signaux métier. Les contrôles ne modifient pas la base brute. Le nettoyage trace ensuite les corrections et statuts. Un signal isolé de durée ou de constance ne justifie pas une exclusion automatique.
+
+```{r}
+table_rapport(read.csv("metadata/plan_controles.csv",fileEncoding="UTF-8"))
+```
+
+```{r}
+table_fichier("qualite_synthese")
+table_fichier("qualite_completion")
+table_fichier("missing_par_bloc")
+```
+
+# Pondération
+
+Le facteur de non-réponse rapporte les sélectionnés aux inclus analytiques dans la cellule. Il corrige donc aussi les exclusions. Les marges, méthodes et limites sont décrites par les tableaux de comparaison ; elles proviennent exclusivement de la population simulée.
+
+```{r}
+table_rapport(read.csv("metadata/correction_non_reponse.csv",fileEncoding="UTF-8"))
+table_fichier("ponderation_marges")
+table_fichier("diagnostic_poids")
+table_fichier("sensibilite_ponderation")
+```
+
+# Descriptifs détaillés
+
+```{r}
+table_rapport(r$table1)
+table_fichier("descriptif_scores_definitifs")
+```
+
+# Psychométrie détaillée
+
+Les matrices polychorïques supposent des réponses latentes continues. Les KMO/MSA sont des diagnostics d’adéquation ; Bartlett sur Pearson est indicatif face au caractère ordinal et au plan d’enquête. Les analyses parallèles permutent les items en conservant leurs marges. Les différences entre alpha et oméga ne prouvent pas une amélioration de mesure.
+
+```{r}
+table_fichier("kmo_bartlett")
+table_fichier("decision_items")
+table_fichier("sensibilite_psychometrie")
+```
+
+# Charges factorielles et scores
+
+L’extraction minres et la rotation oblimin autorisent des dimensions corrélées. Les décisions combinent contenu, charge principale, charges secondaires et cohérence d’ensemble. Les charges ne sont pas des proportions d’enseignants.
+
+```{r}
+table_fichier("loadings_efa")
+table_fichier("communalities_efa")
+table_fichier("factor_correlations")
+table_fichier("interpretation_facteurs")
+table_rapport(r$regles)
+```
+
+# Robustesse de la typologie
+
+Les sous-échantillonnages comparent les partitions sur les individus communs. La faible stabilité interdit de traiter les classes comme des identités professionnelles fixes. L’ACP porte sur les scores et ne remplace pas la psychométrie des items.
+
+```{r}
+table_rapport(r$clusters)
+table_rapport(r$robustesse)
+table_fichier("gap_par_profil")
+```
+
+# Modèles : coefficients et diagnostics
+
+Les modèles sont associatifs et utilisent le plan calibré. L’âge et l’ancienneté sont examinés comme variables redondantes ; `anciennete_classe` est une durée numérique, non une classe catégorielle. Les références et unités rendent les coefficients interprétables. Les OR comparent le profil 2 au profil 1 ; ils ne sont pas des risques relatifs.
+
+```{r}
+table_fichier("references_modeles")
+table_fichier("selection_modeles")
+table_rapport(r$modeles)
+table_rapport(r$diagnostics)
+table_fichier("comparaison_formes_modeles")
+```
+
+Les diagnostics d’influence sont des signaux linéarisés, pas des suppressions d’observations. Le R² est descriptif pour les réponses gaussiennes ; le Brier décrit la logistique. Les SE survey sont robustes au modèle mais ne propagent pas toutes les incertitudes des étapes antérieures.
+
+## Sensibilité de pondération et de qualité
+
+ROBUSTE, MODEREMENT_ROBUSTE et SENSIBLE désignent des conventions de comparaison : écarts maximaux jusqu’à 0,5 SE, jusqu’à 1 SE, ou au-delà ; une inversion de signe marquée conduit aussi à SENSIBLE. Les poids ne sont pas recalibrés après restriction stricte. Ces qualificatifs ne valident pas une interprétation causale ni la stabilité des classes.
+
+```{r}
+table_fichier("robustesse_modeles")
+table_fichier("sensibilite_modeles",c("modele","terme","scenario","coefficient","ic95_inf","ic95_sup","n","conclusion"))
+```
+
+# Références techniques
+
+- [Modèles d’enquête et incertitude avec survey](https://r-survey.r-forge.r-project.org/pkgdown/docs/reference/svyglm.html).
+- [Exécution des documents Quarto](https://quarto.org/docs/projects/code-execution.html).
+
+Ces références documentent les outils. Elles ne constituent pas une validation empirique du questionnaire simulé.

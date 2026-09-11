@@ -66,3 +66,7 @@ $RECYCLE.BIN/
 *.swp
 *.swo
 *~
+
+**/*.quarto_ipynb
+
+/.quarto/

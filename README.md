@@ -21,7 +21,7 @@ Construire une enquête reproductible, contrôler la qualité, prendre en compte
 ## Méthodologie
 
 ```mermaid
-flowchart LR
+flowchart TB
     A[Population] --> B[Échantillonnage]
     B --> C[Questionnaire]
     C --> D[Non-réponse]

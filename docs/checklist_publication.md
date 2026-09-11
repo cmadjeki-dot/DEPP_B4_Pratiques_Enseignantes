@@ -28,20 +28,21 @@ Avertissement non bloquant observé : `testthat` a été compilé sous R 4.6.1, 
 ## Git et publication
 
 - [x] Dépôt distant existant inspecté : un commit initial et un README seulement ; aucun workflow existant.
-- [ ] Historiques réunis sans force push ; branche `main` et remote vérifiés.
-- [ ] Commit final et dépôt local propre.
-- [ ] Push confirmé.
+- [x] Historiques réunis sans force push ; branche `main` et remote vérifiés.
+- [x] Commit final `8ee1450`, puis fusion `3258210` conservant le commit initial distant ; état propre contrôlé avant push.
+- [x] Push confirmé vers `origin/main`.
 - [ ] Pages configuré sur GitHub Actions, build et déploiement réussis.
 - [ ] Accueil, rapport, figures, liens et navigation publiés contrôlés.
-- [ ] README Mermaid affiché sur GitHub et affichage mobile vérifié.
+- [x] Mermaid rendu dans le README GitHub ; disposition verticale retenue pour améliorer la lisibilité.
+- [x] Accueil et rapport locaux vérifiés à 390 pixels avec émulation mobile : aucun débordement horizontal. Contrôle des URL publiées encore à effectuer.
 
-Le schéma utilise la syntaxe `flowchart LR` dans un bloc `mermaid`, prise en charge par [GitHub](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams). Le contrôle visuel distant reste distinct de la validité du bloc Markdown.
+Le schéma utilise la syntaxe `flowchart TB` dans un bloc `mermaid`, prise en charge par [GitHub](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams). Le premier rendu horizontal fonctionnait mais réduisait excessivement les libellés ; la lecture verticale évite cet effet.
 
 Le workflow sépare construction et déploiement, limite les droits Pages au second job et publie uniquement `_site`, conformément au [schéma GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages). R/Quarto et les dépendances sont restaurés avant le calcul ; aucun résultat individuel n’est envoyé comme artefact Pages.
 
 ## Conditions d'activation distante
 
-Le diagnostic du gestionnaire d'identifiants Git n'a trouvé aucune authentification GitHub utilisable. Se connecter depuis VS Code ou Git Credential Manager ; ne jamais écrire de jeton dans les sources ou la documentation.
+L'authentification GitHub est désormais opérationnelle : push confirmé et API Pages consultée. La source Pages est déjà configurée sur `workflow`. Le premier build vierge a restauré renv et installé R/Quarto avec succès ; le recalcul statistique est en cours. Ne jamais écrire de jeton dans les sources ou la documentation.
 
 Dans le dépôt GitHub, choisir **Settings → Pages → Build and deployment → Source : GitHub Actions**. Le workflow part sur un push vers `main` ou via **Actions → Reproduction et publication Quarto → Run workflow**. Les journaux sont conservés comme artefact même après un échec de calcul. Les étapes de rendu, tests et audit doivent réussir avant l'envoi de l'artefact Pages.
 

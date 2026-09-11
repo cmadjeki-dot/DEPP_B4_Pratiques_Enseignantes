@@ -156,4 +156,6 @@ Données entièrement simulées, dépendances imposées par hypothèses, pratiqu
 
 ## Auteur
 
+**Cédric MADJEKI-MA-MOUSSAVOU BIGNOUMBA**
+
 Compte GitHub : [cmadjeki-dot](https://github.com/cmadjeki-dot). Projet personnel de démonstration méthodologique, sans affiliation institutionnelle revendiquée.
